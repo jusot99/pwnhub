@@ -1,6 +1,6 @@
 # PwnHub - Your Ultimate Hacking Resource
 
-![PwnHub](tools/img/pwnhub.webp)
+![PwnHub](image/pwnhub.webp)
 
 Welcome to **PwnHub**, a dedicated repository for ethical hackers, penetration testers, and security researchers. This repository serves as a central hub for various hacking-related resources, including scripts, exploits, books, and more.
 
