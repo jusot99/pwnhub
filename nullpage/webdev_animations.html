@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master Class Reference for Professional Web Developers with Animations and Hover Effects">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Web Development, Animations, Hover Effects">
+    <meta name="author" content="Web Development Master Class">
+    <title>Master Class: Advanced Web Development with Animations</title>
+    <style>
+        /* Base Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Global Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e272e, #3c40c6);
+            color: #f5f6fa;
+            padding: 20px;
+            line-height: 1.7;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1, h2, h3 {
+            color: #ffd32a;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        h1:hover, h2:hover, h3:hover {
+            color: #ffa502;
+            transform: scale(1.1);
+        }
+
+        a {
+            color: #0fbcf9;
+            text-decoration: none;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        a:hover {
+            color: #00a8ff;
+            transform: scale(1.1);
+        }
+
+        code, pre {
+            background: #2c3e50;
+            padding: 5px;
+            color: #ecf0f1;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        code:hover, pre:hover {
+            background: #34495e;
+        }
+
+        section {
+            margin: 30px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #485460;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card ul li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .card ul li::before {
+            content: '\2022';
+            position: absolute;
+            left: 0;
+            color: #ffd32a;
+        }
+
+        blockquote {
+            border-left: 5px solid #ffd32a;
+            padding-left: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #dcdde1;
+            transition: transform 0.3s;
+        }
+
+        blockquote:hover {
+            transform: scale(1.05);
+        }
+
+        button {
+            background: #ffa502;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background: #e67e22;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Master Class: Advanced Web Development with Animations</h1>
+    <p>Your ultimate guide to mastering web development, enhanced with animations and hover effects.</p>
+
+    <section>
+        <h2>1. Semantic HTML</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Structural Tags</h3>
+                <ul>
+                    <li><code>&lt;header&gt;</code>: Defines the header section.</li>
+                    <li><code>&lt;footer&gt;</code>: Defines the footer section.</li>
+                    <li><code>&lt;article&gt;</code>: Self-contained content.</li>
+                    <li><code>&lt;section&gt;</code>: Thematic grouping of content.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Interactive Tags</h3>
+                <ul>
+                    <li><code>&lt;details&gt;</code>: Collapsible content.</li>
+                    <li><code>&lt;summary&gt;</code>: Summary of details.</li>
+                    <li><code>&lt;dialog&gt;</code>: Modal dialog box.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Advanced CSS Techniques</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>CSS Grid</h3>
+                <pre><code>display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 10px;</code></pre>
+            </div>
+            <div class="card">
+                <h3>CSS Keyframes</h3>
+                <pre><code>@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+div {
+    animation: slideIn 1s ease-in-out;
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. JavaScript Essentials</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Event Listeners</h3>
+                <pre><code>document.querySelector('button')
+    .addEventListener('click', () => {
+        alert('Button clicked!');
+    });</code></pre>
+            </div>
+            <div class="card">
+                <h3>Animations with JS</h3>
+                <pre><code>const box = document.querySelector('.box');
+box.addEventListener('mouseover', () => {
+    box.style.transform = 'scale(1.2)';
+});</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>4. Accessibility (A11y)</h2>
+        <blockquote>
+            "Accessibility is not a feature, it is a core part of web development." — Unknown
+        </blockquote>
+        <ul>
+            <li>Use <code>aria-label</code> for custom components.</li>
+            <li>Ensure proper contrast ratios.</li>
+            <li>Test with screen readers.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>Created with ❤️ for aspiring master web developers. Keep building and innovating!</p>
+    </footer>
+</body>
+</html>

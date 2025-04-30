@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle at center, #111, #000);
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, cyan, transparent, transparent);
+            animation: rotateBorder 4s linear infinite;
+        }
+
+        @keyframes rotateBorder {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h2 {
+            color: cyan;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 6px;
+            background: rgba(0, 255, 255, 0.2);
+            color: cyan;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            caret-color: cyan;
+        }
+
+        input:focus {
+            background: rgba(0, 255, 255, 0.3);
+            border: 1px solid cyan;
+        }
+
+        input::placeholder {
+            color: rgba(0, 255, 255, 0.7);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: cyan;
+            color: black;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: lime;
+        }
+
+        .footer {
+            margin-top: 15px;
+            font-size: 13px;
+            color: cyan;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Cyber Login</h2>
+        <form action="#" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Sign In</button>
+        </form>
+        <div class="footer">© 2025 Cyber Portal</div>
+    </div>
+</body>
+</html>

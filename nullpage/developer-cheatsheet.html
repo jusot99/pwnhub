@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 & CSS3 Developer Cheat Sheet</title>
+    <style>
+        /* Base reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styling */
+        body {
+            font-family: 'Fira Code', monospace;
+            line-height: 1.8;
+            color: #e4e4e4;
+            background: #121212;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #00c0ff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        p, li, blockquote, th, td {
+            color: #e4e4e4;
+        }
+
+        a {
+            color: #76c7c0;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #00c0ff;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #333;
+            margin: 20px 0;
+        }
+
+        /* Code blocks */
+        code, pre {
+            background: #212121;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        pre {
+            overflow-x: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Enhanced tables */
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: left;
+        }
+
+        th {
+            background: #333;
+        }
+
+        /* Form enhancements */
+        form {
+            background: #1d1d1d;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: #212121;
+            color: #e4e4e4;
+        }
+
+        input[type="submit"] {
+            background: #00c0ff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background: #007bbf;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 20px;
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* Image styling */
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Dark mode blockquote */
+        blockquote {
+            border-left: 4px solid #00c0ff;
+            padding-left: 20px;
+            font-style: italic;
+            margin: 20px 0;
+            background: #1d1d1d;
+        }
+
+        /* Media elements */
+        audio, video {
+            display: block;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        /* Address styling */
+        address {
+            margin-top: 20px;
+            font-style: normal;
+            color: #76c7c0;
+        }
+
+        /* Highlight important text */
+        mark {
+            background: #00c0ff;
+            color: #121212;
+        }
+    </style>
+</head>
+<body>
+    <h1>HTML5 & CSS3 Developer Cheat Sheet</h1>
+    <p>A comprehensive reference for developers, programmers, and hackers.</p>
+    <hr>
+
+    <h2>1. Common Elements</h2>
+    <p><code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code>: Headings</p>
+    <h3>Example:</h3>
+    <pre><code>&lt;h1&gt;Main Title&lt;/h1&gt;</code></pre>
+
+    <hr>
+
+    <h2>2. Text Elements</h2>
+    <p><code>&lt;p&gt;</code>: Paragraphs</p>
+    <p><code>&lt;b&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;mark&gt;</code>: Bold, Italic, Highlight</p>
+    <blockquote>A blockquote example with inline <mark>highlighting</mark>.</blockquote>
+
+    <hr>
+
+    <h2>3. Lists</h2>
+    <ul>
+        <li>Unordered list item</li>
+        <li>Another list item</li>
+    </ul>
+    <ol>
+        <li>Ordered list item</li>
+        <li>Another list item</li>
+    </ol>
+
+    <hr>
+
+    <h2>4. Tables</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Language</td>
+                <td>HTML5</td>
+            </tr>
+            <tr>
+                <td>Style</td>
+                <td>CSS3</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>5. Forms</h2>
+    <form>
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Your Name">
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Your Email">
+
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="Your Message"></textarea>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <hr>
+
+    <h2>6. Multimedia</h2>
+    <p>Audio Player:</p>
+    <audio controls>
+        <source src="audio.mp3" type="audio/mpeg">
+        Your browser does not support the audio tag.
+    </audio>
+    <p>Video Player:</p>
+    <video controls>
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <hr>
+
+    <h2>7. Address</h2>
+    <address>
+        Created by <b>Elimane</b><br>
+        Email: <a href="mailto:elimane.juuf@example.com">elimane.juuf@example.com</a>
+    </address>
+</body>
+</html>

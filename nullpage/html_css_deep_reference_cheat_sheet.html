@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 and CSS3 Deep Reference Cheat Sheet</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+
+        /* Headers */
+        h1, h2, h3, h4, h5, h6 {
+            margin: 20px 0 10px;
+            color: #222;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        /* Code and Preformatted Text */
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* Links */
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        /* Images */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        /* Forms */
+        form {
+            margin: 20px 0;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Blockquote */
+        blockquote {
+            margin: 20px 0;
+            padding: 10px 20px;
+            border-left: 5px solid #ccc;
+            background-color: #f9f9f9;
+            font-style: italic;
+        }
+
+        /* Highlighted Text */
+        mark {
+            background-color: yellow;
+            color: black;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>HTML5 and CSS3 Deep Reference Cheat Sheet</h1>
+    <p>A detailed guide for mastering HTML5 and CSS3.</p>
+    <hr>
+
+    <div class="section">
+        <h2>1. HTML5 Elements</h2>
+        <ul>
+            <li><code>&lt;header&gt;</code> - Defines a header for a document or section.</li>
+            <li><code>&lt;footer&gt;</code> - Defines a footer for a document or section.</li>
+            <li><code>&lt;article&gt;</code> - Represents a self-contained piece of content.</li>
+            <li><code>&lt;section&gt;</code> - Groups related content together.</li>
+            <li><code>&lt;aside&gt;</code> - Represents content aside from the main content.</li>
+            <li><code>&lt;nav&gt;</code> - Defines navigation links.</li>
+            <li><code>&lt;figure&gt;</code> - Groups media and their captions.</li>
+            <li><code>&lt;figcaption&gt;</code> - Provides a caption for the <code>&lt;figure&gt;</code> element.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>2. Form Elements</h2>
+        <pre><code>&lt;form action="/submit" method="post"&gt;
+    &lt;label for="username"&gt;Username:&lt;/label&gt;
+    &lt;input type="text" id="username" name="username"&gt;
+
+    &lt;label for="password"&gt;Password:&lt;/label&gt;
+    &lt;input type="password" id="password" name="password"&gt;
+
+    &lt;label for="gender"&gt;Gender:&lt;/label&gt;
+    &lt;select id="gender" name="gender"&gt;
+        &lt;option value="male"&gt;Male&lt;/option&gt;
+        &lt;option value="female"&gt;Female&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;input type="submit" value="Submit"&gt;
+&lt;/form&gt;</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>3. CSS3 Selectors</h2>
+        <ul>
+            <li><code>*</code> - Selects all elements.</li>
+            <li><code>element</code> - Selects all instances of the specified element.</li>
+            <li><code>element.class</code> - Selects elements with a specific class.</li>
+            <li><code>#id</code> - Selects an element with a specific ID.</li>
+            <li><code>[attribute]</code> - Selects elements with a specific attribute.</li>
+            <li><code>:nth-child(n)</code> - Selects the nth child of an element.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>4. Advanced CSS3 Features</h2>
+        <pre><code>/* Transitions */
+div {
+    transition: all 0.3s ease;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+div {
+    animation: slideIn 1s ease-in-out;
+}
+
+/* Flexbox */
+display: flex;
+justify-content: center;
+align-items: center;
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>5. Semantic Accessibility</h2>
+        <ul>
+            <li><code>alt</code> attribute for images.</li>
+            <li><code>aria-label</code> and <code>aria-hidden</code> for screen readers.</li>
+            <li>Use of headings in a hierarchical order.</li>
+        </ul>
+    </div>
+
+</body>
+</html>

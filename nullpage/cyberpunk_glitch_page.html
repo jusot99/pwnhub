@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Cyberpunk Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: #020202;
+            color: #0ff;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .glitch {
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            animation: glitch 0.8s infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: -3px -3px 0 #f00, 3px 3px 0 #0ff; }
+            25% { text-shadow: 3px 3px 0 #0ff, -3px -3px 0 #f00; }
+            50% { text-shadow: -3px 3px 0 #f00, 3px -3px 0 #0ff; }
+            75% { text-shadow: 3px -3px 0 #0ff, -3px 3px 0 #f00; }
+            100% { text-shadow: -3px -3px 0 #f00, 3px 3px 0 #0ff; }
+        }
+
+        .terminal {
+            margin-top: 40px;
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #0ff;
+            padding: 15px;
+            width: 60%;
+            text-align: left;
+        }
+
+        .input {
+            color: #0ff;
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            width: 100%;
+            caret-color: #f00;
+            outline: none;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #0ff;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="glitch">ACCESS GRANTED</h1>
+    <div class="terminal">
+        <p>root@cyberpunk:~$ <span class="cursor"></span></p>
+        <input class="input" type="text" placeholder="Type your command..." autofocus>
+    </div>
+</body>
+</html>

