@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: #080808;
+            color: #0ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            width: 80%;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #0ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .blog-post {
+            background: rgba(20, 20, 20, 0.9);
+            border-left: 5px solid #f00;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .stats {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cyberpunk Hacker Dashboard</h1>
+    <div class="dashboard">
+        <div class="card">
+            <h2>System Stats</h2>
+            <p class="stats">CPU: 25% | RAM: 65% | DISK: 42%</p>
+        </div>
+        <div class="card">
+            <h2>Latest Blog Posts</h2>
+            <div class="blog-post">Hacking WiFi in 2025 - New Methods</div>
+            <div class="blog-post">Mastering Bug Bounties - My Journey</div>
+            <div class="blog-post">Pentesting Dark Web - Ethical Guide</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 and CSS3 Tag Reference</title>
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f4f4f9, #e0f7fa);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Headings with shadows */
+        h1, h2, h3 {
+            color: #333;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            margin: 10px 0;
+            transition: color 0.3s ease;
+        }
+
+        h1:hover, h2:hover, h3:hover {
+            color: #007bff;
+        }
+
+        /* Paragraphs with smooth transitions */
+        p {
+            margin-bottom: 15px;
+            max-width: 800px;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        p:hover {
+            transform: scale(1.05);
+        }
+
+        /* Links with transitions */
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        /* Code and Preformatted Text */
+        code {
+            background-color: #eee;
+            padding: 2px 4px;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 3px;
+        }
+
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 100%;
+            overflow-x: auto;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Blockquote with modern styling */
+        blockquote {
+            border-left: 5px solid #ccc;
+            padding-left: 15px;
+            color: #666;
+            font-style: italic;
+            margin: 15px 0;
+        }
+
+        /* List styling */
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e0f7fa;
+            color: #333;
+        }
+
+        /* Enhanced image styling */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Forms with flexbox layout */
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            gap: 15px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        input[type="text"], input[type="email"], textarea {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* New elements styles */
+        em {
+            font-style: italic;
+            color: #555;
+        }
+
+        mark {
+            background-color: yellow;
+            color: black;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        del {
+            color: red;
+            text-decoration: line-through;
+        }
+
+        ins {
+            color: green;
+            text-decoration: underline;
+        }
+
+        sub {
+            vertical-align: sub;
+            font-size: smaller;
+        }
+
+        sup {
+            vertical-align: super;
+            font-size: smaller;
+        }
+
+        b {
+            font-weight: bold;
+            color: #333;
+        }
+
+        abbr {
+            text-decoration: underline dotted;
+            cursor: help;
+        }
+
+        span {
+            background-color: #e0f7fa;
+            padding: 2px 4px;
+        }
+
+        /* Address styling */
+        address {
+            font-style: italic;
+            color: #555;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>HTML5 and CSS3 Tag Reference</h1>
+    <hr>
+
+    <h2>1. Headings</h2>
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h3>
+
+    <hr>
+
+    <h2>2. Text Elements</h2>
+    <p>This is a paragraph element. It is used to structure text into blocks.</p>
+    <p><em>Emphasized text</em>, <mark>highlighted text</mark>, <del>deleted text</del>, and <ins>inserted text</ins>.</p>
+    <p>Text with <sub>subscript</sub> and <sup>superscript</sup> notation.</p>
+    <p>This is <b>bold text</b>, and here is a <abbr title="HyperText Markup Language">HTML</abbr> abbreviation.</p>
+    <p><span>Span element with background color</span> for inline styling.</p>
+    <blockquote>This is a blockquote, used for quoted text.</blockquote>
+
+    <hr>
+
+    <h2>3. Lists</h2>
+    <h3>Unordered List</h3>
+    <ul>
+        <li>List item 1</li>
+        <li>List item 2</li>
+        <li>List item 3</li>
+    </ul>
+    <h3>Ordered List</h3>
+    <ol>
+        <li>First item</li>
+        <li>Second item</li>
+        <li>Third item</li>
+    </ol>
+
+    <hr>
+
+    <h2>4. Links and Images</h2>
+    <p>This is a <a href="#">link</a> to an external page.</p>
+    <img src="https://via.placeholder.com/150" alt="Sample Image">
+
+    <hr>
+
+    <h2>5. Tables</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Column 1</th>
+                <th>Column 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Data 1</td>
+                <td>Data 2</td>
+            </tr>
+            <tr>
+                <td>Data 3</td>
+                <td>Data 4</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>6. Forms</h2>
+    <form action="#" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4"></textarea><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <hr>
+
+    <h2>7. Media Elements</h2>
+    <p>Audio:</p>
+    <audio controls>
+        <source src="audio-file.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <p>Video:</p>
+    <video controls width="320" height="240">
+        <source src="video-file.mp4" type="video/mp4">
+        Your browser does not support the video element.
+    </video>
+
+    <hr>
+
+    <h2>8. Address</h2>
+    <address>
+        Written by <b>Elimane</b>.<br>
+        Visit us at:<br>
+        Example.com<br>
+        Box 564, Disneyland<br>
+        USA
+    </address>
+
+</body>
+</html>

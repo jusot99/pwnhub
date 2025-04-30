@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hacker's Toolkit</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+    }
+    h1 {
+      color: #58a6ff;
+    }
+    .container {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      margin: 10px 0;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+    label {
+      color: #58a6ff;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #30363d;
+      border-radius: 5px;
+      background: #0d1117;
+      color: #c9d1d9;
+    }
+    button {
+      background: #238636;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2ea043;
+    }
+    .results {
+      margin-top: 20px;
+      background: #21262d;
+      padding: 15px;
+      border-radius: 5px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hacker's Toolkit</h1>
+  
+  <!-- HTTP Penetration Testing -->
+  <div class="container">
+    <h2>HTTP Penetration Testing</h2>
+    <label for="urlInput">Target URL:</label>
+    <input type="url" id="urlInput" placeholder="Enter the target URL">
+    <label for="methodSelect">HTTP Method:</label>
+    <select id="methodSelect">
+      <option value="GET">GET</option>
+      <option value="POST">POST</option>
+    </select>
+    <label for="payload">Payload (Optional):</label>
+    <textarea id="payload" placeholder="Enter payload (JSON or form data)"></textarea>
+    <label for="headers">Custom Headers (JSON format):</label>
+    <textarea id="headers" placeholder='{"Authorization": "Bearer token"}'></textarea>
+    <button onclick="startPenTest()">Start Test</button>
+    <div class="results" id="output"></div>
+  </div>
+  
+  <!-- Directory Scanner -->
+  <div class="container">
+    <h2>Directory Scanner</h2>
+    <label for="dirInput">Target URL:</label>
+    <input type="url" id="dirInput" placeholder="Enter the target URL">
+    <button onclick="scanDirectories()">Scan Directories</button>
+    <div class="results" id="dirResults"></div>
+  </div>
+
+  <!-- CSRF Tester -->
+  <div class="container">
+    <h2>CSRF Tester</h2>
+    <label for="csrfUrl">Target URL:</label>
+    <input type="url" id="csrfUrl" placeholder="Enter the target URL">
+    <label for="csrfPayload">Payload:</label>
+    <textarea id="csrfPayload" placeholder="Enter payload (JSON or form data)"></textarea>
+    <button onclick="testCSRF()">Test CSRF</button>
+    <div class="results" id="csrfResults"></div>
+  </div>
+
+  <!-- Hash Cracker -->
+  <div class="container">
+    <h2>Hash Cracker</h2>
+    <label for="hashInput">Enter Hash:</label>
+    <input type="text" id="hashInput" placeholder="Enter hash (e.g., MD5)">
+    <button onclick="crackHash()">Crack Hash</button>
+    <div class="results" id="hashResults"></div>
+  </div>
+
+  <!-- GitHub Recon Tool -->
+  <div class="container">
+    <h2>GitHub Recon Tool</h2>
+    <label for="githubUsername">Enter GitHub Username:</label>
+    <input type="text" id="githubUsername" placeholder="Enter GitHub username">
+    <button onclick="performGitHubRecon()">Get GitHub Info</button>
+    <div class="results" id="githubResults"></div>
+  </div>
+
+  <!-- JavaScript Section -->
+  <script>
+    /**
+     * HTTP Penetration Testing
+     */
+    async function startPenTest() {
+      const url = document.getElementById("urlInput").value;
+      const method = document.getElementById("methodSelect").value;
+      const payload = document.getElementById("payload").value;
+      const headers = document.getElementById("headers").value;
+
+      const output = document.getElementById("output");
+      output.innerText = "Starting test...\n";
+
+      try {
+        const options = { method, headers: JSON.parse(headers || '{}') };
+        if (payload) options.body = payload;
+
+        const response = await fetch(url, options);
+        const responseText = await response.text();
+
+        output.innerText += `Response Status: ${response.status}\n`;
+        output.innerText += `Response Body:\n${responseText}\n`;
+      } catch (err) {
+        output.innerText += `Error: ${err.message}\n`;
+      }
+    }
+
+    /**
+     * Directory Scanner
+     */
+    function scanDirectories() {
+      const url = document.getElementById("dirInput").value;
+      const directories = ["/admin", "/login", "/dashboard", "/api", "/config"];
+      const dirResults = document.getElementById("dirResults");
+      dirResults.innerText = "Scanning directories...\n";
+
+      directories.forEach(dir => {
+        dirResults.innerText += `Checked: ${url}${dir} - Status: 404 (Simulated)\n`;
+      });
+    }
+
+    /**
+     * CSRF Tester
+     */
+    async function testCSRF() {
+      const url = document.getElementById("csrfUrl").value;
+      const payload = document.getElementById("csrfPayload").value;
+
+      const csrfResults = document.getElementById("csrfResults");
+      csrfResults.innerText = "Testing CSRF...\n";
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payload
+        });
+        csrfResults.innerText += `Response Status: ${response.status}\n`;
+        csrfResults.innerText += `Response Body:\n${await response.text()}\n`;
+      } catch (err) {
+        csrfResults.innerText += `Error: ${err.message}\n`;
+      }
+    }
+
+    /**
+     * Hash Cracker (Simulated)
+     */
+    function crackHash() {
+      const hash = document.getElementById("hashInput").value;
+      const commonHashes = {
+        "5f4dcc3b5aa765d61d8327deb882cf99": "password", // MD5
+        "098f6bcd4621d373cade4e832627b4f6": "test"      // MD5
+      };
+
+      const hashResults = document.getElementById("hashResults");
+      hashResults.innerText = "Cracking hash...\n";
+
+      if (commonHashes[hash]) {
+        hashResults.innerText += `Hash matched! Value: ${commonHashes[hash]}\n`;
+      } else {
+        hashResults.innerText += "No match found in common hash database.\n";
+      }
+    }
+
+    /**
+     * GitHub Recon Tool
+     */
+    async function performGitHubRecon() {
+      const username = document.getElementById("githubUsername").value;
+      const githubResults = document.getElementById("githubResults");
+      githubResults.innerText = "Fetching GitHub data...\n";
+
+      if (!username) {
+        githubResults.innerText = "Error: Please enter a GitHub username.";
+        return;
+      }
+
+      try {
+        const userResponse = await fetch(`https://api.github.com/users/${username}`);
+        if (!userResponse.ok) {
+          githubResults.innerText = `Error: User ${username} not found.`;
+          return;
+        }
+        const userData = await userResponse.json();
+
+        const repoResponse = await fetch(userData.repos_url);
+        const repos = await repoResponse.json();
+
+        githubResults.innerText = `
+          GitHub Username: ${userData.login}
+          Name: ${userData.name || "N/A"}
+          Location: ${userData.location || "N/A"}
+          Email: ${userData.email || "N/A"}
+          Followers: ${userData.followers}
+          Following: ${userData.following}
+          Public Repositories: ${userData.public_repos}
+          Profile: ${userData.html_url}
+        `;
+
+        githubResults.innerText += `\nRepositories:\n`;
+        repos.forEach(repo => {
+          githubResults.innerText += `
+            Repo Name: ${repo.name}
+            Stars: ${repo.stargazers_count}
+            Forks: ${repo.forks_count}
+            URL: ${repo.html_url}
+          `;
+        });
+      } catch (error) {
+        githubResults.innerText = `Error: Unable to fetch data. ${error.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
