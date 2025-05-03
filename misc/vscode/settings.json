@@ -1,0 +1,92 @@
+{
+    "workbench.editor.enablePreview": false,
+  "breadcrumbs.enabled": true,
+  "explorer.confirmDelete": false,
+  "explorer.compactFolders": false, // Better folder visibility in the Explorer
+
+  // Auto-save and formatting
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    // Set Prettier as the formatter for specific languages
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Editor Appearance and Behavior
+  "editor.cursorStyle": "underline",
+  "editor.cursorBlinking": "smooth",
+  "editor.fontFamily": "Hack Nerd Font Mono, Consolas, monospace",
+  "editor.fontLigatures": true, // Enable ligatures for better code visualization
+  "editor.fontSize": 14,
+  "editor.lineHeight": 22,
+  "editor.minimap.enabled": true,
+  "editor.minimap.maxColumn": 120, // Restrict minimap width for clarity
+  "editor.renderWhitespace": "boundary", // Show only leading/trailing spaces
+  "editor.tabSize": 4,
+  "editor.detectIndentation": false,
+  "editor.wordWrap": "on", // Wrap text for better readability
+  "editor.smoothScrolling": true,
+  "editor.renderControlCharacters": true, // Highlight special characters
+
+  // Terminal Customizations
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "terminal.integrated.defaultProfile.windows": "PowerShell", // Adjust as needed
+  "terminal.integrated.fontFamily": "Hack Nerd Font Mono",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.shellIntegration.enabled": true, // Auto-detect shell features
+
+  // IntelliSense and Suggestions
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+  "editor.suggestSelection": "first",
+  "editor.inlineSuggest.enabled": true, // Inline suggestions for faster coding
+  "editor.parameterHints.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+
+  // Git and Version Control
+  "git.autofetch": true, // Automatically fetch changes
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.decorations.enabled": true, // Show git decorations in Explorer
+
+  // Debugging
+  "debug.inlineValues": "on", // Display variable values inline during debugging
+
+  // File Explorer and Usability
+  "explorer.autoReveal": true,
+  "explorer.confirmDragAndDrop": false,
+  "files.trimTrailingWhitespace": true, // Trim trailing spaces on save
+  "files.insertFinalNewline": true, // Ensure files end with a newline
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true
+  },
+
+  // Additional Enhancements
+  "emmet.triggerExpansionOnTab": true, // Enable Emmet for faster HTML/CSS coding
+  "search.followSymlinks": false, // Improve search performance
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "none",
+  "workbench.settings.applyToAllProfiles": [
+  
+
+  ],
+  "workbench.editorAssociations": {
+    "*.html": "default"
+},
+"workbench.colorTheme": "Default Dark+" // Keep imports consistent
+}

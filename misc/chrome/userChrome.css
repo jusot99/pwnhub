@@ -1,0 +1,81 @@
+/* Custom Font Across UI */
+*,
+*::before,
+*::after {
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace !important;
+    font-size: 14px !important;
+}
+
+/* Hide Clutter (cleaner top bar) */
+#alltabs-button,
+.titlebar-buttonbox-container,
+#tracking-protection-icon-container,
+#identity-box {
+    display: none !important;
+}
+
+/* Frosted Glass URL Bar + Tabs */
+#urlbar-background,
+.tab-background {
+    background-color: rgba(20, 20, 20, 0.6) !important;
+    backdrop-filter: blur(6px) saturate(150%) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Always Show Extensions */
+#nav-bar .webextension-browser-action,
+#unified-extensions-button {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transition: none !important;
+}
+
+/* Intelligent Tab Resizing */
+.tabbrowser-tab {
+    transition:
+        min-width 0.3s cubic-bezier(0.270, 0.910, 0.435, 1.280),
+        max-width 0.3s cubic-bezier(0.270, 0.910, 0.435, 1.280),
+        height 0.2s ease-in-out !important;
+    height: 100%;
+    margin: 2px 4px !important;
+    padding-inline: 6px !important;
+    border-radius: 10px !important;
+}
+
+.tabbrowser-tab[fadein]:not([pinned]) {
+    max-width: 180px !important;
+}
+
+.tabbrowser-tab[selected]:not([pinned]) {
+    min-width: 240px !important;
+    max-width: 240px !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Rounded Tab Corners (even when selected) */
+.tab-background[selected="true"] {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* Active Tab Highlight */
+.tab-label[selected="true"] {
+    color: #00ffd5 !important;
+    font-weight: bold !important;
+    text-shadow: 0 0 3px rgba(0, 255, 213, 0.6);
+}
+
+/* Subtle Hover Effect on Tabs */
+.tabbrowser-tab:hover .tab-label {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* URL bar: focused state with glow */
+#urlbar[focused="true"] > #urlbar-background {
+    box-shadow: 0 0 6px rgba(0, 200, 255, 0.7) !important;
+}
+
+/* Minor Polish */
+:root {
+    --toolbar-bgcolor: transparent !important;
+}
