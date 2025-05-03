@@ -1,0 +1,58 @@
+/* Set custom font for UI elements */
+*,
+*::before,
+*::after {
+    font-family: JetBrainsMono Nerd Font, JetBrains Mono, monospace, monospace;
+}
+
+/* Hide unnecessary UI elements */
+#alltabs-button,
+.titlebar-buttonbox-container,
+#tracking-protection-icon-container,
+#identity-box {
+    display: none;
+}
+
+/* Ensure menu bar is visible */
+#toolbar-menubar {
+    display: flex !important;
+    visibility: visible !important;
+}
+
+/* Auto-hide extension icons efficiently */
+/* #nav-bar .webextension-browser-action,
+#unified-extensions-button {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+} */
+
+/* Show extensions on hover with optimized event handling */
+#nav-bar:hover .webextension-browser-action,
+#nav-bar:hover #unified-extensions-button {
+    opacity: 1 !important;
+    pointer-events: auto;
+}
+
+/* Optimize tab appearance */
+.tabbrowser-tab {
+    transition: min-width 0.3s cubic-bezier(0.270, 0.910, 0.435, 1.280),
+                max-width 0.3s cubic-bezier(0.270, 0.910, 0.435, 1.280),
+                height 0.1s ease !important;
+    height: 100%;
+}
+
+.tabbrowser-tab[fadein]:not([pinned]) {
+    max-width: 175px !important;
+}
+
+.tabbrowser-tab[selected]:not([pinned]) {
+    min-width: 250px !important;
+    max-width: 250px !important;
+}
+
+/* Rounded corners for better UI aesthetics */
+:where(.tab-background),
+:where(#urlbar-background) {
+    border-radius: 10px !important;
+}
