@@ -4,6 +4,8 @@ import argparse
 import dns.resolver
 import dns.query
 import dns.zone
+import subprocess
+import json
 from colorama import init, Fore, Style
 
 init(autoreset=True)
@@ -16,7 +18,7 @@ BANNER = f"""
     ██      ██   ██ ██  ██ ██ ██   ██ ██ ██  ██ ██
     ██      ██   ██ ██   ████ ██   ██ ██ ██   ████
 
-                {Fore.WHITE + Style.BRIGHT}DNS Info & Recon by Elimane
+         {Fore.WHITE + Style.BRIGHT}DNS Recon & Subdomain Hunt by Elimane
 """
 
 def query_records(domain, record_type):
@@ -31,113 +33,92 @@ def query_records(domain, record_type):
 def zone_transfer(ns, domain):
     try:
         zone = dns.zone.from_xfr(dns.query.xfr(ns, domain, timeout=5))
-        names = zone.nodes.keys()
-        hosts = []
-        for n in names:
-            hosts.append(str(n))
+        hosts = [str(n) for n in zone.nodes.keys()]
         return hosts, None
+    except Exception as e:
+        return None, e
+
+def get_crtsh_subdomains(domain):
+    try:
+        result = subprocess.run(
+            ["curl", "-s", f"https://crt.sh/?q=%25.{domain}&output=json"],
+            capture_output=True, text=True, check=True
+        )
+        if not result.stdout.strip():
+            return None, "Empty response from crt.sh"
+        data = json.loads(result.stdout)
+        subdomains = set()
+        for entry in data:
+            name_value = entry.get("name_value")
+            if name_value:
+                for line in name_value.splitlines():
+                    subdomains.add(line.strip())
+        return sorted(subdomains), None
+    except json.JSONDecodeError as e:
+        return None, f"JSON Decode Error: {e}"
     except Exception as e:
         return None, e
 
 def main():
     parser = argparse.ArgumentParser(description="DNS Enumeration Tool")
-    parser.add_argument("domain", help="Domain or IP to enumerate")
+    parser.add_argument("domain", help="Domain to enumerate")
     args = parser.parse_args()
+    domain = args.domain
 
-    print(Fore.CYAN + BANNER)
-    print(f"[+] Resolving DNS for: {Fore.YELLOW}{args.domain}\n")
+    print(BANNER)
+    print(f"{Fore.CYAN}[+] Domain Target: {Fore.YELLOW}{domain}\n")
 
-    # Query A records
-    answers, err = query_records(args.domain, "A")
-    print(Fore.GREEN + "[A Record]")
-    if answers:
-        for rdata in answers:
-            print(f" → {rdata.address}")
-    elif err:
-        print(Fore.RED + f" ✖ A Record Error: {err}")
-    else:
-        print(" → No A record found.")
-    print()
-
-    # Query AAAA records
-    answers, err = query_records(args.domain, "AAAA")
-    print(Fore.GREEN + "[AAAA Record]")
-    if answers:
-        for rdata in answers:
-            print(f" → {rdata.address}")
-    elif err:
-        print(Fore.RED + f" ✖ AAAA Record Error: {err}")
-    else:
-        print(" → No AAAA record found.")
-    print()
-
-    # Query MX records
-    answers, err = query_records(args.domain, "MX")
-    print(Fore.GREEN + "[MX Record]")
-    if answers:
-        for rdata in answers:
-            print(f" → {rdata.preference} {rdata.exchange}")
-    elif err:
-        print(Fore.RED + f" ✖ MX Record Error: {err}")
-    else:
-        print(" → No MX record found.")
-    print()
-
-    # Query NS records
-    answers, err = query_records(args.domain, "NS")
-    print(Fore.GREEN + "[NS Record]")
+    record_types = ["A", "AAAA", "MX", "NS", "TXT", "CNAME"]
     ns_list = []
-    if answers:
-        for rdata in answers:
-            ns = str(rdata.target).rstrip('.')
-            ns_list.append(ns)
-            print(f" → {ns}")
-    elif err:
-        print(Fore.RED + f" ✖ NS Record Error: {err}")
-    else:
-        print(" → No NS record found.")
-    print()
 
-    # Query TXT records
-    answers, err = query_records(args.domain, "TXT")
-    print(Fore.GREEN + "[TXT Record]")
-    if answers:
-        for rdata in answers:
-            # TXT records are list of strings, join them
-            txt = ''.join([part.decode() if isinstance(part, bytes) else part for part in rdata.strings]) if hasattr(rdata, 'strings') else str(rdata)
-            print(f" → {txt}")
-    elif err:
-        print(Fore.RED + f" ✖ TXT Record Error: {err}")
-    else:
-        print(" → No TXT record found.")
-    print()
+    for rtype in record_types:
+        answers, err = query_records(domain, rtype)
+        print(Fore.MAGENTA + f"[{rtype} Record]")
+        if answers:
+            for rdata in answers:
+                if rtype == "MX":
+                    print(Fore.WHITE + f" → {Fore.YELLOW}{rdata.preference} {rdata.exchange}")
+                elif rtype == "TXT":
+                    txt = ''.join([part.decode() if isinstance(part, bytes) else part for part in getattr(rdata, 'strings', [])])
+                    print(Fore.WHITE + f" → {Fore.YELLOW}{txt}")
+                else:
+                    output = getattr(rdata, 'target', getattr(rdata, 'address', rdata))
+                    print(Fore.WHITE + f" → {Fore.YELLOW}{output}")
+                    if rtype == "NS":
+                        ns_list.append(str(rdata.target).rstrip('.'))
+        elif err:
+            print(Fore.RED + f" ✖ Error: {str(err).strip() or 'Unknown error'}")
+        else:
+            print(Fore.YELLOW + " → No record found.")
+        print()
 
-    # Query CNAME record
-    answers, err = query_records(args.domain, "CNAME")
-    print(Fore.GREEN + "[CNAME Record]")
-    if answers:
-        for rdata in answers:
-            print(f" → {rdata.target}")
-    elif err:
-        print(Fore.RED + f" ✖ CNAME Error: {err}")
-    else:
-        print(" → No CNAME record found.")
-    print()
-
-    # Zone Transfer test
-    print(Fore.GREEN + "[Zone Transfer Test]")
+    # Zone Transfer Test
+    print(Fore.MAGENTA + "[Zone Transfer Test]")
     if not ns_list:
-        print(" → No NS records found, skipping zone transfer test.")
+        print(Fore.YELLOW + " → Skipped (No NS Records)")
     else:
         for ns in ns_list:
-            print(f" → Trying NS: {ns}")
-            hosts, err = zone_transfer(ns, args.domain)
+            print(Fore.CYAN + f" → Trying NS: {ns}")
+            hosts, err = zone_transfer(ns, domain)
             if hosts:
-                print(Fore.YELLOW + f"   ✔ Zone transfer successful! Found {len(hosts)} entries:")
+                print(Fore.GREEN + f"   ✔ Zone transfer successful! {len(hosts)} entries:")
                 for h in hosts:
-                    print(f"     - {h}")
+                    print(Fore.YELLOW + f"     - {h}")
             else:
-                print(Fore.RED + f"   ✖ Failed on {ns}: {err}")
+                print(Fore.RED + f"   ✖ Failed: {str(err).strip() or 'Unknown reason'}")
+    print()
+
+    # crt.sh Subdomain Search
+    print(Fore.MAGENTA + "[crt.sh Subdomain Enumeration]")
+    subdomains, err = get_crtsh_subdomains(domain)
+    if subdomains:
+        for sub in subdomains:
+            print(Fore.WHITE + f" → {Fore.YELLOW}{sub}")
+    elif err:
+        print(Fore.RED + f" ✖ crt.sh Error: {str(err).strip()}")
+    else:
+        print(Fore.YELLOW + " → No subdomains found.")
+
     print()
 
 if __name__ == "__main__":
