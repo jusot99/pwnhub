@@ -1,5 +1,5 @@
 #!/bin/bash
-# ghost-privesc.sh — Elimane's Ultimate Linux Privilege Escalation Recon Tool
+# ghost-privesc.sh — Jusot99's Ultimate Linux Privilege Escalation Recon Tool
 # Author: @jusot99 | Elite Hacker Mode
 
 set -e

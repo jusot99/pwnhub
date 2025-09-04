@@ -1,4 +1,4 @@
-# Elimane's PowerShell Post-Exploitation Recon Script
+# Jusot99's PowerShell Post-Exploitation Recon Script
 # Ghost Hacker Edition 🧠👻
 
 function Section($title) {

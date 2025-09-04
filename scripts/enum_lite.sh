@@ -1,5 +1,5 @@
 #!/bin/bash
-# Elimane's Enum Script - Quick Recon after Foothold
+# Jusot99's Enum Script - Quick Recon after Foothold
 # Author: @jusot99 | Ghost Hacker Mode
 
 # Colors

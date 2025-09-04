@@ -2,7 +2,7 @@
 
 # Universal Linux Hardening Script
 # Supports: Debian, Ubuntu, Kali, ParrotOS
-# Author: Elimane
+# Author: jusot99
 # Use: sudo ./harden-linux.sh
 
 # COLORS

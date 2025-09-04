@@ -1,5 +1,5 @@
 #!/bin/bash
-# black-privesc.sh — Elimane's Black Hat PrivEsc Weapon
+# black-privesc.sh — Jusot99's Black Hat PrivEsc Weapon
 # Stealth. Power. Root. | Author: @jusot99
 
 set +x

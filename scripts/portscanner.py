@@ -18,7 +18,7 @@ def banner():
 ██║     ╚██████╔╝███████║   ██║       ██║     ╚██████╔╝   ██║
 ╚═╝      ╚═════╝ ╚══════╝   ╚═╝       ╚═╝      ╚═════╝    ╚═╝
     Network Port Scanner - For Ethical Hacking & Testing Only!
-    """ + Fore.YELLOW + Style.BRIGHT + "Author: Elimane")
+    """ + Fore.YELLOW + Style.BRIGHT + "Author: Jusot99")
 
 # Service detection
 def get_service(port):

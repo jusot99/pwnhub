@@ -30,7 +30,7 @@ def print_banner():
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠉⠀
 
 {Style.BRIGHT}{Fore.CYAN}          [ ETHICAL NETWORK THREAT DETECTOR ]
-{Style.BRIGHT}{Fore.YELLOW}            Created by Elimane
+{Style.BRIGHT}{Fore.YELLOW}            Created by Jusot99
 """
     print(banner)
 

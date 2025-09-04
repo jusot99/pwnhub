@@ -17,7 +17,7 @@ def banner():
    ▒░▒   ░   ░ ▒ ▒░░ ░▒  ░ ░ ░ ░  ░
     ░    ░ ░ ░ ░ ▒ ░  ░  ░     ░
     ░          ░ ░       ░     ░  ░
-         ░  DoS Attack Script w/ Scapy\n""" + Fore.WHITE + Style.BRIGHT + "\t\tCreated by Elimane")
+         ░  DoS Attack Script w/ Scapy\n""" + Fore.WHITE + Style.BRIGHT + "\t\tCreated by Jusot99")
 
 def dos_attack(target_ip, target_port, iface=None):
     packet_count = 0

@@ -22,7 +22,7 @@ BANNER = f"""
  ░ ░  ░    ░   ░ ░ ░  ░  ░   ▒ ░   ░   ░ ░  ░ ░   ░ ░ ░ ▒
    ░             ░       ░   ░           ░            ░ ░
  ░
-         {Fore.WHITE + Style.BRIGHT}DNS Recon & Subdomain Hunt by Elimane
+         {Fore.WHITE + Style.BRIGHT}DNS Recon & Subdomain Hunt by Jusot99
 """
 
 def query_records(domain, record_type):

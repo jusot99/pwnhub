@@ -20,7 +20,7 @@ def banner():
 ██║     ███████╗██║ ╚═╝ ██║╚██████╔╝██║  ██║██║  ██║██║
 ╚═╝     ╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝
     Advanced DDoS Simulation Tool - For Educational Use Only!
-    """ + Fore.YELLOW + Style.BRIGHT + "Author: Elimane")
+    """ + Fore.YELLOW + Style.BRIGHT + "Author: Jusot99")
 
 # User-agent list for random selection
 USER_AGENTS = [

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # BLACKFANG v1.0 - The Ruthless Linux Hardener
-# By Elimane
+# By jusot99
 
 LOG="/var/log/blackfang.log"
 mkdir -p /var/log && touch $LOG && chmod 600 $LOG
