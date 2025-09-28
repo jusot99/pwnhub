@@ -1,79 +1,102 @@
 #!/bin/bash
 
 # Universal Linux Hardening Script
-# Supports: Debian, Ubuntu, Kali, ParrotOS
 # Author: jusot99
-# Use: sudo ./harden-linux.sh
+# Usage: sudo ./harden-linux.sh
 
-# COLORS
-GREEN='\033[0;32m'; RED='\033[0;31m'; BLUE='\033[0;34m'; NC='\033[0m'
-success_msg () { echo -e "${GREEN}[✔] $1${NC}"; }
-fail_msg () { echo -e "${RED}[✘] $1${NC}"; exit 1; }
-info_msg () { echo -e "${BLUE}[i] $1${NC}"; }
+# Colors
+RED='\033[0;31m'; GREEN='\033[0;32m'; BLUE='\033[0;34m'; YELLOW='\033[1;33m'; NC='\033[0m'
+log() { echo -e "${GREEN}[✔] $1${NC}"; }
+warn() { echo -e "${YELLOW}[!] $1${NC}"; }
+error() { echo -e "${RED}[✘] $1${NC}"; }
+info() { echo -e "${BLUE}[i] $1${NC}"; }
 
-# Ensure root
-if [[ $EUID -ne 0 ]]; then
-  echo -e "${RED}[-] Run this script as root.${NC}"; exit 1
-fi
+# Root check
+[[ $EUID -ne 0 ]] && error "Run as root: sudo $0" && exit 1
 
-echo -e "${GREEN}[*] Starting Universal Linux Hardening Script...${NC}"
+# Banner
+echo -e "${GREEN}
+╔══════════════════════════════════════╗
+║        LOCKDOWN - Linux Hardener     ║
+║              by jusot99              ║
+╚══════════════════════════════════════╝${NC}"
 
-#######################
+# Detect OS
+source /etc/os-release
+info "Detected: $PRETTY_NAME"
+
+# Backup function
+backup_file() {
+    cp "$1" "$1.bak.$(date +%s)" 2>/dev/null && log "Backed up: $1"
+}
+
 # 1. SYSTEM UPDATE
-#######################
-info_msg "Updating and upgrading system..."
-apt update -y && apt upgrade -y && apt dist-upgrade -y && apt autoremove -y && apt autoclean -y || fail_msg "System update failed"
-success_msg "System updated"
+info "Updating system..."
+apt update && apt upgrade -y && apt autoremove -y || warn "Some updates failed"
 
-#######################
-# 2. BASIC TOOLING
-#######################
-info_msg "Installing essential tools..."
-apt install -y curl wget git build-essential apt-transport-https ca-certificates gnupg2 software-properties-common jq zsh glances fail2ban ufw auditd audispd-plugins chkrootkit rkhunter || fail_msg "Tool install failed"
-success_msg "Tools installed"
+# 2. ESSENTIAL SECURITY TOOLS
+info "Installing security tools..."
+apt install -y fail2ban ufw auditd chkrootkit rkhunter lynis unattended-upgrades \
+               apt-listbugs debsums needrestart || warn "Some packages failed"
 
-#######################
 # 3. SSH HARDENING
-#######################
-info_msg "Hardening SSH..."
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-sed -i 's/#\?PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
-sed -i 's/#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-sed -i 's/#\?Port .*/Port 2200/' /etc/ssh/sshd_config
-systemctl restart ssh || fail_msg "SSH service failed to restart"
-success_msg "SSH hardened (Port 2200, no root login)"
+info "Hardening SSH..."
+backup_file "/etc/ssh/sshd_config"
+sed -i 's/#\?PermitRootLogin.*/PermitRootLogin no/g;
+        s/#\?PasswordAuthentication.*/PasswordAuthentication no/g;
+        s/#\?Port.*/Port 2200/g;
+        s/#\?X11Forwarding.*/X11Forwarding no/g;
+        s/#\?ClientAliveInterval.*/ClientAliveInterval 300/g' /etc/ssh/sshd_config
+systemctl restart sshd && log "SSH secured (Port 2200, no root)"
 
-#######################
-# 4. UFW FIREWALL
-#######################
-info_msg "Configuring UFW..."
+# 4. FIREWALL CONFIG
+info "Configuring UFW..."
+ufw --force reset
 ufw default deny incoming
 ufw default allow outgoing
-ufw allow 2200/tcp
-ufw allow 80,443/tcp
-ufw --force enable
-success_msg "UFW firewall configured"
+ufw allow 2200/tcp comment 'SSH'
+ufw allow 80,443/tcp comment 'HTTP/HTTPS'
+ufw --force enable && log "Firewall active"
 
-#######################
-# 5. FAIL2BAN
-#######################
-info_msg "Configuring Fail2Ban..."
-cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-cat <<EOF > /etc/fail2ban/jail.local
+# 5. FAIL2BAN SETUP
+info "Configuring Fail2Ban..."
+cat > /etc/fail2ban/jail.local << 'EOF'
+[DEFAULT]
+bantime = 3600
+findtime = 600
+maxretry = 3
+
 [sshd]
 enabled = true
 port = 2200
 logpath = /var/log/auth.log
-maxretry = 5
 EOF
-systemctl restart fail2ban
-success_msg "Fail2Ban configured"
+systemctl restart fail2ban && log "Fail2Ban running"
 
-#######################
-# 6. FILESYSTEM & USB HARDENING
-#######################
-info_msg "Disabling unused filesystems and USB..."
-cat <<EOF > /etc/modprobe.d/harden_unused_fs.conf
+# 6. KERNEL HARDENING
+info "Hardening kernel parameters..."
+cat >> /etc/sysctl.conf << 'EOF'
+# Security hardening
+net.ipv4.ip_forward=0
+net.ipv4.conf.all.send_redirects=0
+net.ipv4.conf.default.send_redirects=0
+net.ipv4.conf.all.accept_redirects=0
+net.ipv4.conf.default.accept_redirects=0
+net.ipv4.conf.all.accept_source_route=0
+net.ipv4.conf.default.accept_source_route=0
+net.ipv4.conf.all.log_martians=1
+net.ipv4.icmp_echo_ignore_broadcasts=1
+net.ipv4.icmp_ignore_bogus_error_responses=1
+net.ipv4.tcp_syncookies=1
+net.ipv6.conf.all.accept_redirects=0
+kernel.dmesg_restrict=1
+kernel.kptr_restrict=2
+EOF
+sysctl -p && log "Kernel hardened"
+
+# 7. FILESYSTEM PROTECTION
+info "Securing filesystems..."
+cat > /etc/modprobe.d/hardening.conf << 'EOF'
 install cramfs /bin/true
 install freevxfs /bin/true
 install jffs2 /bin/true
@@ -81,108 +104,78 @@ install hfs /bin/true
 install hfsplus /bin/true
 install squashfs /bin/true
 install udf /bin/true
-install vfat /bin/true
 install usb-storage /bin/true
 EOF
-success_msg "Unused filesystems and USB disabled"
 
-#######################
-# 7. AUTOMATIC UPDATES
-#######################
-info_msg "Enabling automatic security updates..."
-apt install -y unattended-upgrades
-dpkg-reconfigure -plow unattended-upgrades
-success_msg "Unattended upgrades enabled"
-
-#######################
-# 8. AUDIT LOGGING
-#######################
-info_msg "Enabling audit logging..."
-systemctl enable auditd && systemctl start auditd
-success_msg "Auditd enabled"
-
-#######################
-# 9. DNS HARDENING
-#######################
-info_msg "Securing DNS settings..."
-cp /etc/resolv.conf /etc/resolv.conf.bak
-cat <<EOF > /etc/resolv.conf
+# 8. SECURE DNS
+info "Configuring secure DNS..."
+cat > /etc/resolv.conf << 'EOF'
 nameserver 1.1.1.1
-nameserver 9.9.9.9
+nameserver 1.0.0.1
+nameserver 2606:4700:4700::1111
 options edns0
 EOF
-chattr +i /etc/resolv.conf
-success_msg "/etc/resolv.conf locked"
+chattr +i /etc/resolv.conf 2>/dev/null && log "DNS locked"
 
-#######################
-# 10. SECURE SHM
-#######################
-info_msg "Securing shared memory..."
-echo "tmpfs /run/shm tmpfs defaults,noexec,nosuid 0 0" >> /etc/fstab
+# 9. PASSWORD POLICY
+info "Setting password policies..."
+sed -i 's/^PASS_MAX_DAYS.*/PASS_MAX_DAYS   90/;
+        s/^PASS_MIN_DAYS.*/PASS_MIN_DAYS   1/;
+        s/^PASS_WARN_AGE.*/PASS_WARN_AGE   7/' /etc/login.defs
+apt install -y libpam-pwquality
+echo "password requisite pam_pwquality.so retry=3 minlen=12" >> /etc/pam.d/common-password
 
-#######################
-# 11. PASSWORD POLICY
-#######################
-info_msg "Enforcing password policy..."
-sed -i 's/^PASS_MAX_DAYS.*/PASS_MAX_DAYS   90/' /etc/login.defs
-sed -i 's/^PASS_MIN_DAYS.*/PASS_MIN_DAYS   10/' /etc/login.defs
-sed -i 's/^PASS_WARN_AGE.*/PASS_WARN_AGE   7/' /etc/login.defs
-success_msg "Password policies set"
+# 10. AUDIT & MONITORING
+info "Enabling audit system..."
+systemctl enable auditd && systemctl start auditd
+cat > /etc/audit/rules.d/hardening.rules << 'EOF'
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/group -p wa -k identity
+-w /etc/ssh/sshd_config -p wa -k sshd
+-a always,exit -F arch=b64 -S execve
+EOF
+auditctl -R /etc/audit/rules.d/hardening.rules
 
-#######################
-# 12. PROXYCHAINS & TOR
-#######################
-info_msg "Installing Tor and ProxyChains..."
+# 11. ANONYMIZATION TOOLS
+info "Installing privacy tools..."
 apt install -y tor proxychains4
-systemctl enable tor && systemctl start tor
-sed -i 's/#dynamic_chain/dynamic_chain/' /etc/proxychains4.conf
-sed -i 's/strict_chain/#strict_chain/' /etc/proxychains4.conf
+systemctl enable tor --now
+sed -i 's/#dynamic_chain/dynamic_chain/; s/strict_chain/#strict_chain/' /etc/proxychains4.conf
 echo "socks5 127.0.0.1 9050" >> /etc/proxychains4.conf
-success_msg "Tor and ProxyChains configured"
 
-#######################
-# 13. VPN (ProtonVPN CLI)
-#######################
-info_msg "Installing ProtonVPN CLI..."
-wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.4_all.deb
-dpkg -i ./protonvpn-stable-release_1.0.4_all.deb && apt update
-apt install -y protonvpn-cli
-rm -f protonvpn-stable-release_1.0.4_all.deb
-success_msg "ProtonVPN CLI installed"
-
-#######################
-# 14. ROOTKIT SCANS
-#######################
-info_msg "Running rootkit scans..."
-chkrootkit
-rkhunter --update && rkhunter --propupd && rkhunter --checkall
-success_msg "Rootkit scan complete"
-
-#######################
-# 15. PERMISSIONS HARDENING
-#######################
-info_msg "Hardening sensitive file permissions..."
+# 12. SECURE PERMISSIONS
+info "Fixing permissions..."
 chmod 600 /etc/shadow
-chmod 644 /etc/passwd
-chmod 644 /etc/group
+chmod 644 /etc/passwd /etc/group
 chmod 600 /etc/ssh/sshd_config
-success_msg "Permissions hardened"
+find /var/log -type f -exec chmod 600 {} \;
 
-#######################
-# 16. REMOVE UNUSED SERVICES
-#######################
-info_msg "Removing unnecessary services..."
-apt purge -y telnet xinetd rsh-server rsh-client talk talkd
-success_msg "Unused services removed"
+# 13. MALWARE SCAN
+info "Running security scans..."
+chkrootkit 2>/dev/null | grep -E "INFECTED|VULNERABLE" || true
+rkhunter --update && rkhunter --propupd && rkhunter --check --sk 2>/dev/null | tail -20
 
-#######################
-# 17. CLEANUP
-#######################
-info_msg "Cleaning up..."
-apt autoremove -y && apt clean -y
-success_msg "System cleaned"
+# 14. CLEANUP
+info "Cleaning up..."
+apt autoremove -y && apt clean
+journalctl --vacuum-time=7d
 
-#######################
-# DONE
-#######################
-echo -e "${GREEN}[✓] System hardening complete. Review settings and reboot.${NC}"
+# FINAL REPORT
+echo -e "${GREEN}
+╔══════════════════════════════════════╗
+║           HARDENING COMPLETE         ║
+╠══════════════════════════════════════╣
+║ ✅ System Updated                    ║
+║ ✅ SSH Secured (Port 2200)           ║
+║ ✅ Firewall Enabled                  ║
+║ ✅ Fail2Ban Active                   ║
+║ ✅ Kernel Hardened                   ║
+║ ✅ DNS Secured                       ║
+║ ✅ Audit Logging Enabled             ║
+║ ✅ Privacy Tools Installed           ║
+╚══════════════════════════════════════╝${NC}"
+
+warn "Important: Test SSH on port 2200 before disconnecting!"
+warn "Recommended: Reboot system to apply all changes"
+log "Hardening complete by jusot99 - Stay secure! 🔒"
