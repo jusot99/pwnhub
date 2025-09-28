@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>mitmproxy Playground — HTTPS, WebSockets, XHR</title>
+  <style>
+    :root { --bg: #0f1223; --panel:#171a2b; --card:#1d2140; --accent:#7cf5c9; --muted:#9aa4bd; --text:#eef2ff; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(135deg, #0c0f1d, #151830);
+      color: var(--text);
+    }
+    header { padding: 28px 20px 8px; text-align: center; }
+    h1 { margin: 0; font-size: 28px; letter-spacing: 0.4px; }
+    .sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
+    main { max-width: 1100px; margin: 24px auto 60px; padding: 0 16px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .card { background: var(--card); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+    .card h2 { margin: 0 0 8px; font-size: 18px; }
+    .card p { margin: 6px 0 12px; color: var(--muted); font-size: 14px; }
+
+    button, a.btn { background: var(--accent); color: #07110c; border: none; padding: 10px 14px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: transform .05s ease, filter .2s ease; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+    button:hover, a.btn:hover { filter: brightness(1.06); }
+    button:active { transform: translateY(1px); }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    pre, code { background:#0f1328; color:#c8d0ff; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px; overflow:auto; font-size: 12px; }
+    .log { height: 180px; background: #0c1024; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.08); padding: 10px; overflow:auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .ok { color: #8df0c2; }
+    .err { color: #ff9db1; }
+    .muted { color: var(--muted); }
+    .tiny { font-size: 12px; }
+    .badge { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: #0c1024; color: var(--muted); border: 1px solid rgba(255,255,255,0.06); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    footer { max-width: 1100px; margin: 24px auto; padding: 0 16px; color: var(--muted); font-size: 13px; }
+    .hint { background: #0c1024; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 10px 12px; }
+    .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>mitmproxy Playground</h1>
+    <div class="sub">Use this page to practice intercepting <span class="badge">HTTPS</span>, editing requests, and inspecting WebSockets.</div>
+  </header>
+
+  <main>
+    <div class="hint tiny">
+      <strong>Tip:</strong> Serve this file via a local server so your browser uses the system proxy. For example: <span class="mono">python3 -m http.server 8000</span> then open <span class="mono">http://127.0.0.1:8000/index.html</span>.
+    </div>
+
+    <div class="grid" style="margin-top:16px;">
+      <section class="card">
+        <h2>1) Simple HTTPS GET (httpbin)</h2>
+        <p>Fetches <span class="mono">https://httpbin.org/get</span> with custom headers. Should appear as TLS in mitmproxy if the CA is installed.</p>
+        <div class="row">
+          <button id="btn-get">Send GET</button>
+        </div>
+        <div class="divider"></div>
+        <pre id="out-get" class="log"></pre>
+      </section>
+
+      <section class="card">
+        <h2>2) HTTPS POST JSON (httpbin)</h2>
+        <p>Posts JSON to <span class="mono">https://httpbin.org/post</span>. Useful to edit body/headers on the fly.</p>
+        <div class="row">
+          <button id="btn-post">Send POST</button>
+        </div>
+        <div class="divider"></div>
+        <pre id="out-post" class="log"></pre>
+      </section>
+
+      <section class="card">
+        <h2>3) Redirect: HTTP → HTTPS</h2>
+        <p>Calls <span class="mono">http://httpbin.org/get</span> which redirects to HTTPS. You should see both flows in mitmproxy.</p>
+        <div class="row">
+          <button id="btn-redirect">Trigger Redirect</button>
+        </div>
+        <div class="divider"></div>
+        <pre id="out-redirect" class="log"></pre>
+      </section>
+
+      <section class="card">
+        <h2>4) Image over HTTPS</h2>
+        <p>Loads an image from <span class="mono">https://httpbin.org/image/png</span>. Good to see binary content interception.</p>
+        <div class="row">
+          <button id="btn-image">Load Image</button>
+        </div>
+        <div class="divider"></div>
+        <div id="img-wrap" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;"></div>
+      </section>
+
+      <section class="card">
+        <h2>5) WebSocket Echo (wss)</h2>
+        <p>Opens <span class="mono">wss://echo.websocket.events</span> and sends a test message.</p>
+        <div class="row">
+          <button id="btn-ws-open">Open WS</button>
+          <button id="btn-ws-send" disabled>Send Message</button>
+          <button id="btn-ws-close" disabled>Close</button>
+        </div>
+        <div class="divider"></div>
+        <pre id="out-ws" class="log"></pre>
+      </section>
+
+      <section class="card">
+        <h2>6) CORS preflight (JSONPlaceholder)</h2>
+        <p>Sends a <span class="badge">CORS</span> request to <span class="mono">https://jsonplaceholder.typicode.com/posts</span>. Watch for OPTIONS + POST.</p>
+        <div class="row">
+          <button id="btn-cors">Send CORS POST</button>
+        </div>
+        <div class="divider"></div>
+        <pre id="out-cors" class="log"></pre>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:16px;">
+      <h2>How to use with mitmproxy / mitmweb</h2>
+      <ol class="tiny">
+        <li>Install: <span class="mono">pip install mitmproxy</span> (or your package manager).</li>
+        <li>Start UI: <span class="mono">mitmweb -p 8080</span> (web UI) or <span class="mono">mitmproxy -p 8080</span> (TUI).</li>
+        <li>Set your system/browser proxy to <span class="mono">HTTP/HTTPS: 127.0.0.1:8080</span>.</li>
+        <li>Open <span class="mono">http://mitm.it</span> in the proxied browser → download & install the mitmproxy <strong>CA certificate</strong> for your OS/browser.</li>
+        <li>Reload this page and click the buttons above. You should now see decrypted HTTPS flows.</li>
+        <li>To intercept/pause flows, press <span class="mono">i</span> in <span class="mono">mitmproxy</span> or enable <em>intercept</em> in mitmweb → edit → resume.</li>
+        <li>To rewrite on the fly: mitmweb → <em>Options → Addons → Modify body/headers</em> or run mitmproxy with a small addon script.</li>
+      </ol>
+      <div class="divider"></div>
+      <details>
+        <summary class="tiny">Example addon (save as <span class="mono">edit_title.py</span>)</summary>
+<pre class="tiny">from mitmproxy import http
+
+def response(flow: http.HTTPFlow) -> None:
+    if flow.response and flow.response.headers.get("content-type", "").startswith("application/json"):
+        flow.response.headers["x-mitmproxy-playground"] = "✅ touched"
+</pre>
+        <div class="tiny muted">Run with: <span class="mono">mitmproxy -s edit_title.py -p 8080</span></div>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <div class="hint">Security note: Only intercept traffic you own or have explicit permission to test. Installing a custom CA gives the proxy power to decrypt your HTTPS. Remove it when done.</div>
+  </footer>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const log = (el, text, cls) => { const p = document.createElement('div'); p.textContent = text; if (cls) p.className = cls; el.appendChild(p); el.scrollTop = el.scrollHeight; };
+
+    // 1) GET
+    $("btn-get").onclick = async () => {
+      const out = $("out-get"); out.textContent = '';
+      try {
+        const res = await fetch('https://httpbin.org/get', {
+          headers: { 'X-Playground': 'mitmproxy', 'X-Power': 'ghost-ninja' }
+        });
+        const data = await res.json();
+        log(out, 'Status: ' + res.status + ' ' + res.statusText, 'ok');
+        log(out, JSON.stringify(data, null, 2));
+      } catch (e) { log(out, 'Error: ' + e, 'err'); }
+    };
+
+    // 2) POST
+    $("btn-post").onclick = async () => {
+      const out = $("out-post"); out.textContent = '';
+      try {
+        const res = await fetch('https://httpbin.org/post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Playground': 'mitmproxy' },
+          body: JSON.stringify({ msg: 'hello from playground', ts: Date.now() })
+        });
+        const data = await res.json();
+        log(out, 'Status: ' + res.status + ' ' + res.statusText, 'ok');
+        log(out, JSON.stringify(data, null, 2));
+      } catch (e) { log(out, 'Error: ' + e, 'err'); }
+    };
+
+    // 3) Redirect HTTP -> HTTPS
+    $("btn-redirect").onclick = async () => {
+      const out = $("out-redirect"); out.textContent = '';
+      try {
+        const res = await fetch('http://httpbin.org/get');
+        const data = await res.json();
+        log(out, 'Final URL: ' + res.url, 'ok');
+        log(out, JSON.stringify(data, null, 2));
+      } catch (e) { log(out, 'Error: ' + e, 'err'); }
+    };
+
+    // 4) Image over HTTPS
+    $("btn-image").onclick = () => {
+      const wrap = $("img-wrap"); wrap.innerHTML = '';
+      const img = new Image();
+      img.alt = 'httpbin png';
+      img.width = 160; img.height = 160; img.style.borderRadius = '12px'; img.style.border = '1px solid rgba(255,255,255,0.1)';
+      img.onload = () => { /* noop */ };
+      img.onerror = () => { wrap.innerHTML = '<span class="err">Image failed to load.</span>'; };
+      img.src = 'https://httpbin.org/image/png?_=' + Date.now();
+      wrap.appendChild(img);
+    };
+
+    // 5) WebSocket Echo
+    let ws = null;
+    const outWs = $("out-ws");
+    $("btn-ws-open").onclick = () => {
+      outWs.textContent = '';
+      try {
+        ws = new WebSocket('wss://echo.websocket.events');
+        ws.onopen = () => { log(outWs, 'WS open', 'ok'); $("btn-ws-send").disabled = false; $("btn-ws-close").disabled = false; };
+        ws.onmessage = (ev) => log(outWs, 'recv: ' + ev.data);
+        ws.onerror = (ev) => log(outWs, 'WS error', 'err');
+        ws.onclose = () => { log(outWs, 'WS closed'); $("btn-ws-send").disabled = true; $("btn-ws-close").disabled = true; };
+      } catch (e) { log(outWs, 'Error: ' + e, 'err'); }
+    };
+    $("btn-ws-send").onclick = () => { if (ws && ws.readyState === 1) ws.send('hello mitmproxy ' + Date.now()); };
+    $("btn-ws-close").onclick = () => { if (ws) ws.close(); };
+
+    // 6) CORS preflight
+    $("btn-cors").onclick = async () => {
+      const out = $("out-cors"); out.textContent = '';
+      try {
+        const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Playground': 'mitmproxy-cors' },
+          body: JSON.stringify({ title: 'foo', body: 'bar', userId: 1 })
+        });
+        const data = await res.json();
+        log(out, 'Status: ' + res.status + ' ' + res.statusText, 'ok');
+        log(out, JSON.stringify(data, null, 2));
+      } catch (e) { log(out, 'Error: ' + e, 'err'); }
+    };
+  </script>
+</body>
+</html>

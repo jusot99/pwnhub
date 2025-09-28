@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackScript - Hacker's Programming Language</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 3em;
+            font-weight: 700;
+            text-shadow: 0 0 20px #00ff00;
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #33ff33;
+            opacity: 0;
+            animation: typewriter 2s steps(30) 1s both;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
+            to { text-shadow: 0 0 30px #00ff00, 0 0 40px #00ff00, 0 0 50px #00ff00; }
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; opacity: 1; }
+            to { width: 100%; opacity: 1; }
+        }
+        
+        .terminal {
+            background: #000;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .terminal::before {
+            content: '● ● ●';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            color: #ff0000;
+            font-size: 12px;
+        }
+        
+        .terminal-header {
+            color: #00ff00;
+            font-size: 14px;
+            margin-bottom: 15px;
+            padding-top: 15px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #111;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #00ff00;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'HACKSCRIPT';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #000;
+            color: #00ff00;
+            padding: 2px 8px;
+            font-size: 10px;
+            border: 1px solid #00ff00;
+        }
+        
+        .keyword { color: #ff6b6b; font-weight: bold; }
+        .string { color: #ffd93d; }
+        .comment { color: #6c757d; font-style: italic; }
+        .function { color: #4ecdc4; }
+        .variable { color: #45b7d1; }
+        .operator { color: #96ceb4; }
+        
+        .demo-section {
+            margin: 30px 0;
+        }
+        
+        .demo-section h3 {
+            color: #00ff00;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: #111;
+            border: 1px solid #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .feature-card h4 {
+            color: #00ff00;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .run-btn {
+            background: #000;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 10px 20px;
+            font-family: 'Source Code Pro', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+        
+        .run-btn:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 15px #00ff00;
+        }
+        
+        .output {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: #00ff00;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="matrix-bg" id="matrix"></canvas>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">HackScript</h1>
+            <div class="subtitle">The Programming Language for Terminal Warriors</div>
+        </div>
+
+        <div class="demo-section">
+            <h3>Language Syntax & Examples</h3>
+            
+            <div class="terminal">
+                <div class="terminal-header">root@hackbox:~/projects$ hackscript demo.hack</div>
+                
+                <div class="code-block">
+<span class="comment">// Basic port scanning simulation</span>
+<span class="keyword">scan</span> <span class="variable">target</span> <span class="operator">=</span> <span class="string">"192.168.1.1"</span>
+<span class="keyword">enum</span> <span class="variable">ports</span> <span class="operator">=</span> [<span class="string">22, 80, 443, 3389</span>]
+
+<span class="keyword">exploit</span> <span class="function">port_sweep</span>(<span class="variable">target</span>, <span class="variable">ports</span>) <span class="operator">{</span>
+    <span class="keyword">for</span> <span class="variable">port</span> <span class="keyword">in</span> <span class="variable">ports</span> <span class="operator">{</span>
+        <span class="keyword">probe</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="function">connect</span>(<span class="variable">target</span>, <span class="variable">port</span>)
+        <span class="keyword">if</span> <span class="variable">connection</span>.<span class="function">alive</span>() <span class="operator">{</span>
+            <span class="function">output</span>(<span class="string">f"[+] Port {port} OPEN on {target}"</span>)
+        <span class="operator">}</span> <span class="keyword">else</span> <span class="operator">{</span>
+            <span class="function">output</span>(<span class="string">f"[-] Port {port} closed"</span>)
+        <span class="operator">}</span>
+    <span class="operator">}</span>
+<span class="operator">}</span>
+
+<span class="keyword">execute</span> <span class="function">port_sweep</span>(<span class="variable">target</span>, <span class="variable">ports</span>)
+                </div>
+                
+                <button class="run-btn" onclick="runPortScan()">EXECUTE SCAN ></button>
+                <div class="output" id="scan-output"></div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>Advanced Features</h3>
+            
+            <div class="terminal">
+                <div class="terminal-header">root@hackbox:~/exploits$ cat advanced.hack</div>
+                
+                <div class="code-block">
+<span class="comment">// Payload generation and execution</span>
+<span class="keyword">payload</span> <span class="variable">reverse_shell</span> <span class="operator">=</span> <span class="function">craft</span>(<span class="string">"tcp_reverse"</span>) <span class="operator">{</span>
+    <span class="variable">host</span>: <span class="string">"10.0.0.100"</span>,
+    <span class="variable">port</span>: <span class="string">4444</span>,
+    <span class="variable">encoding</span>: <span class="string">"base64"</span>
+<span class="operator">}</span>
+
+<span class="keyword">listener</span> <span class="variable">handler</span> <span class="operator">=</span> <span class="function">bind</span>(<span class="string">4444</span>) <span class="operator">{</span>
+    <span class="keyword">on_connect</span>(<span class="variable">session</span>) <span class="operator">{</span>
+        <span class="function">shell</span>(<span class="variable">session</span>)
+        <span class="function">output</span>(<span class="string">"[+] Got shell! Welcome to the matrix..."</span>)
+    <span class="operator">}</span>
+<span class="operator">}</span>
+
+<span class="comment">// Steganography example</span>
+<span class="keyword">hide</span> <span class="variable">secret_data</span> <span class="keyword">in</span> <span class="string">"innocent.jpg"</span> <span class="keyword">as</span> <span class="string">"stego.jpg"</span>
+<span class="keyword">extract</span> <span class="variable">hidden</span> <span class="keyword">from</span> <span class="string">"stego.jpg"</span> <span class="keyword">using</span> <span class="string">"lsb_method"</span>
+                </div>
+                
+                <button class="run-btn" onclick="runAdvanced()">DEPLOY PAYLOAD ></button>
+                <div class="output" id="advanced-output"></div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h4>Hacker Keywords</h4>
+                <p><strong>scan, exploit, probe, payload, listener, inject, extract, hide, decrypt, crack</strong> - Built-in commands that feel natural to security researchers</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Terminal Integration</h4>
+                <p>Native <strong>shell()</strong>, <strong>cmd()</strong>, and <strong>pipe()</strong> functions. Execute system commands seamlessly within your HackScript programs</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Network Primitives</h4>
+                <p><strong>connect(), bind(), send(), recv()</strong> - Low-level networking made simple for penetration testing and network analysis</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Crypto Built-ins</h4>
+                <p><strong>hash(), encrypt(), decrypt(), sign()</strong> - Cryptographic operations are first-class citizens in the language</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Stealth Mode</h4>
+                <p><strong>stealth { }</strong> blocks automatically handle process hiding, log cleaning, and anti-forensics for sensitive operations</p>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Terminal Styling</h4>
+                <p>Built-in support for colors, progress bars, and ASCII art. Make your hacking tools look as cool as they are functional</p>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>Interactive Shell Demo</h3>
+            <div class="terminal">
+                <div class="terminal-header">HackScript Interactive Shell v1.0</div>
+                <div id="shell-output">
+                    <div>hackscript> <span class="cursor"></span></div>
+                </div>
+                <input type="text" id="shell-input" style="background:transparent;border:none;color:#00ff00;font-family:'Source Code Pro';outline:none;width:100%;" placeholder="Type HackScript commands here..." onkeypress="handleShellInput(event)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()";
+        const drops = [];
+        
+        for(let x = 0; x < canvas.width/10; x++) {
+            drops[x] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.font = '15px Source Code Pro';
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = matrix[Math.floor(Math.random() * matrix.length)];
+                ctx.fillText(text, i*10, drops[i]*10);
+                
+                if(drops[i]*10 > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 35);
+        
+        // Demo functions
+        function runPortScan() {
+            const output = document.getElementById('scan-output');
+            output.innerHTML = '';
+            
+            const results = [
+                '[*] Starting port scan on 192.168.1.1',
+                '[+] Port 22 OPEN on 192.168.1.1',
+                '[-] Port 80 closed',
+                '[+] Port 443 OPEN on 192.168.1.1',
+                '[-] Port 3389 closed',
+                '[*] Scan complete. 2/4 ports open.'
+            ];
+            
+            let i = 0;
+            const interval = setInterval(() => {
+                if(i < results.length) {
+                    output.innerHTML += results[i] + '<br>';
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 500);
+        }
+        
+        function runAdvanced() {
+            const output = document.getElementById('advanced-output');
+            output.innerHTML = '';
+            
+            const results = [
+                '[*] Crafting TCP reverse shell payload...',
+                '[*] Encoding payload with base64...',
+                '[*] Payload size: 2048 bytes',
+                '[*] Starting listener on port 4444...',
+                '[+] Listener active and waiting for connections...',
+                '[*] Hiding data in innocent.jpg using LSB method...',
+                '[+] Steganography complete. Output: stego.jpg'
+            ];
+            
+            let i = 0;
+            const interval = setInterval(() => {
+                if(i < results.length) {
+                    output.innerHTML += results[i] + '<br>';
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 700);
+        }
+        
+        function handleShellInput(event) {
+            if(event.key === 'Enter') {
+                const input = document.getElementById('shell-input');
+                const output = document.getElementById('shell-output');
+                const command = input.value.trim();
+                
+                if(command) {
+                    // Add command to output
+                    output.innerHTML = output.innerHTML.replace('<span class="cursor"></span>', '');
+                    output.innerHTML += command + '<br>';
+                    
+                    // Simple command responses
+                    let response = '';
+                    if(command.includes('scan')) {
+                        response = '[+] Initiating network scan...';
+                    } else if(command.includes('exploit')) {
+                        response = '[*] Loading exploit modules...';
+                    } else if(command.includes('help')) {
+                        response = 'Available commands: scan, exploit, probe, payload, listener, decrypt, help';
+                    } else if(command.includes('whoami')) {
+                        response = 'root@hackbox - Elite Hacker Mode Activated';
+                    } else {
+                        response = `[*] Executing: ${command}`;
+                    }
+                    
+                    output.innerHTML += response + '<br>';
+                }
+                
+                output.innerHTML += 'hackscript> <span class="cursor"></span>';
+                input.value = '';
+                output.scrollTop = output.scrollHeight;
+            }
+        }
+        
+        // Auto-focus shell input
+        document.getElementById('shell-input').focus();
+    </script>
+</body>
+</html>

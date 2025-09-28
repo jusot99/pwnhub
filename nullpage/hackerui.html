@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hacker Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/framer-motion@6.3.0/dist/framer-motion.umd.min.js"></script>
+  <style>
+    /* Custom animations to mimic Framer Motion */
+    .page-enter {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    .page-center {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .page-exit {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    .transition-all {
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Gradient backgrounds */
+    .bg-gradient-portal {
+      background: linear-gradient(to bottom right, #061029, #071326);
+    }
+
+    /* Custom input styles */
+    .portal-input {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .portal-input:focus {
+      outline: none;
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.5);
+    }
+    .portal-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Chart container */
+    .chart-container {
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden">
+  <!-- Floating decorations -->
+  <div id="floating-decorations">
+    <div class="pointer-events-none absolute -left-6 -top-6 w-40 h-40 rounded-2xl bg-gradient-to-br from-indigo-600/30 to-sky-400/20 blur-3xl animate-float-1"></div>
+    <div class="pointer-events-none absolute right-6 bottom-20 w-28 h-28 rounded-full bg-gradient-to-tr from-rose-500/20 to-yellow-300/20 blur-2xl animate-float-2"></div>
+  </div>
+
+  <!-- Main content container -->
+  <div id="app" class="container mx-auto px-4 py-12 relative z-10">
+    <!-- Login Page (shown by default) -->
+    <div id="login-page" class="page page-center relative w-full max-w-md mx-auto p-8 rounded-2xl bg-gradient-portal shadow-lg border border-white/5">
+      <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+        <i class="fas fa-sign-in-alt"></i>
+        Hacker Portal
+      </h2>
+      <p class="text-sm text-white/60 mb-6">Sign in to access your terminal-like dashboard.</p>
+
+      <form id="login-form" class="space-y-4">
+        <label class="block">
+          <span class="text-xs text-white/70">Username</span>
+          <input
+            id="username"
+            class="mt-1 w-full portal-input rounded-md p-3"
+            placeholder="ghost_agent"
+          />
+        </label>
+        <label class="block">
+          <span class="text-xs text-white/70">Password</span>
+          <input
+            id="password"
+            type="password"
+            class="mt-1 w-full portal-input rounded-md p-3"
+            placeholder="••••••••"
+          />
+        </label>
+
+        <div class="flex items-center justify-between gap-3">
+          <button
+            type="submit"
+            class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-sky-400 text-white font-semibold shadow hover:scale-[1.01] active:scale-95 transition"
+          >
+            Sign in
+          </button>
+
+          <button
+            type="button"
+            id="quick-demo"
+            class="text-xs text-white/60 underline"
+          >
+            Quick demo
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6 text-xs text-white/50">No logs. No traces — just a demo UI. Customize auth logic as you like.</div>
+    </div>
+
+    <!-- Dashboard Page (hidden by default) -->
+    <div id="dashboard-page" class="page page-enter hidden">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold flex items-center gap-3">
+          <i class="fas fa-tachometer-alt"></i>
+          Dashboard
+        </h1>
+        <button id="logout-btn" class="text-white/70 hover:text-white transition">
+          <i class="fas fa-sign-out-alt mr-2"></i>Logout
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Mini Cards -->
+        <div class="bg-white/3 border border-white/5 rounded-xl p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs text-white/60">Active Sessions</div>
+              <div class="text-xl font-semibold text-white mt-1">42</div>
+            </div>
+            <div class="text-2xl text-white/70"><i class="fas fa-chart-line"></i></div>
+          </div>
+        </div>
+
+        <div class="bg-white/3 border border-white/5 rounded-xl p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs text-white/60">System Load</div>
+              <div class="text-xl font-semibold text-white mt-1">76%</div>
+            </div>
+            <div class="text-2xl text-white/70"><i class="fas fa-tachometer-alt"></i></div>
+          </div>
+        </div>
+
+        <div class="bg-white/3 border border-white/5 rounded-xl p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs text-white/60">Security Level</div>
+              <div class="text-xl font-semibold text-white mt-1">High</div>
+            </div>
+            <div class="text-2xl text-white/70"><i class="fas fa-user-shield"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart Section -->
+      <div class="bg-white/3 border border-white/5 rounded-xl p-6">
+        <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+          <i class="fas fa-chart-line"></i>
+          Activity Monitor
+        </h2>
+        <div class="chart-container">
+          <canvas id="activityChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="flex justify-end mt-8 gap-4">
+        <button id="prev-page" class="px-4 py-2 bg-white/10 rounded-lg text-white/70 hover:text-white hover:bg-white/20 transition">
+          <i class="fas fa-chevron-left mr-2"></i>Back
+        </button>
+        <button id="next-page" class="px-4 py-2 bg-white/10 rounded-lg text-white/70 hover:text-white hover:bg-white/20 transition">
+          Next<i class="fas fa-chevron-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chart Page (hidden by default) -->
+    <div id="chart-page" class="page page-enter hidden">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold flex items-center gap-3">
+          <i class="fas fa-chart-line"></i>
+          Advanced Analytics
+        </h1>
+        <button id="back-to-dashboard" class="text-white/70 hover:text-white transition">
+          <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+        </button>
+      </div>
+
+      <div class="bg-white/3 border border-white/5 rounded-xl p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-4">Detailed Activity Chart</h2>
+        <div class="chart-container">
+          <canvas id="detailedChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample data for charts
+    const sampleData = [
+      { name: "00:00", value: 12 },
+      { name: "01:00", value: 18 },
+      { name: "02:00", value: 8 },
+      { name: "03:00", value: 22 },
+      { name: "04:00", value: 16 },
+      { name: "05:00", value: 26 },
+      { name: "06:00", value: 20 },
+    ];
+
+    // Page transition functions
+    function showPage(pageId, direction = 1) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.add('hidden');
+        page.classList.remove('page-center');
+        page.classList.add(direction > 0 ? 'page-enter' : 'page-exit');
+      });
+
+      // Show selected page with animation
+      const page = document.getElementById(pageId);
+      page.classList.remove('hidden');
+      setTimeout(() => {
+        page.classList.remove('page-enter', 'page-exit');
+        page.classList.add('page-center');
+      }, 50);
+    }
+
+    // Initialize charts
+    function initCharts() {
+      // Activity Chart (Dashboard)
+      const activityCtx = document.getElementById('activityChart').getContext('2d');
+      new Chart(activityCtx, {
+        type: 'line',
+        data: {
+          labels: sampleData.map(item => item.name),
+          datasets: [{
+            label: 'Activity Level',
+            data: sampleData.map(item => item.value),
+            borderColor: 'rgba(99, 102, 241, 1)',
+            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+            tension: 0.3,
+            pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(99, 102, 241, 1)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.6)'
+              }
+            },
+            y: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.6)'
+              }
+            }
+          }
+        }
+      });
+
+      // Detailed Chart (Chart Page)
+      const detailedCtx = document.getElementById('detailedChart').getContext('2d');
+      new Chart(detailedCtx, {
+        type: 'line',
+        data: {
+          labels: sampleData.map(item => item.name),
+          datasets: [{
+            label: 'Detailed Activity',
+            data: sampleData.map(item => item.value),
+            borderColor: 'rgba(168, 85, 247, 1)',
+            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+            tension: 0.3,
+            pointBackgroundColor: 'rgba(168, 85, 247, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(168, 85, 247, 1)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 1
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.6)'
+              }
+            },
+            y: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.6)'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Login functionality
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username.trim() && password.trim()) {
+        showPage('dashboard-page');
+        initCharts();
+      }
+    });
+
+    // Quick demo login
+    document.getElementById('quick-demo').addEventListener('click', function() {
+      document.getElementById('username').value = 'root';
+      document.getElementById('password').value = 'toor';
+    });
+
+    // Logout functionality
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      showPage('login-page', -1);
+    });
+
+    // Back to dashboard
+    document.getElementById('back-to-dashboard').addEventListener('click', function() {
+      showPage('dashboard-page', -1);
+    });
+
+    // Navigation buttons
+    document.getElementById('next-page').addEventListener('click', function() {
+      showPage('chart-page');
+    });
+
+    document.getElementById('prev-page').addEventListener('click', function() {
+      showPage('dashboard-page', -1);
+    });
+
+    // Add animation classes for floating decorations
+    document.styleSheets[0].insertRule(`
+      @keyframes float1 {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+      }
+      .animate-float-1 {
+        animation: float1 6s ease-in-out infinite;
+      }
+    `);
+
+    document.styleSheets[0].insertRule(`
+      @keyframes float2 {
+        0%, 100% { transform: translate(0, 0); }
+        50% { transform: translate(-10px, 10px); }
+      }
+      .animate-float-2 {
+        animation: float2 8s ease-in-out infinite;
+      }
+    `);
+  </script>
+</body>
+</html>
