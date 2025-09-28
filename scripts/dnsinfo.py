@@ -43,6 +43,21 @@ class DNSRecon:
         ╚══════════════════════════════════════╝
 {Style.RESET_ALL}""")
 
+    def is_ip_address(self, target):
+        """Check if target is an IP address"""
+        try:
+            socket.inet_aton(target)
+            return True
+        except socket.error:
+            return False
+
+    def get_domain_from_ip(self, ip):
+        """Try to get domain name from IP"""
+        try:
+            return socket.gethostbyaddr(ip)[0]
+        except:
+            return ip
+
     def animate_loading(self, text, duration=2):
         """Enhanced loading animation with progress"""
         end_time = time.time() + duration
@@ -70,9 +85,16 @@ class DNSRecon:
         sys.exit(1)
 
     def query_records(self, domain, record_type):
-        """Enhanced DNS query with multiple resolvers"""
+        """Enhanced DNS query that handles both domains and IPs"""
         try:
-            # Try multiple DNS resolvers
+            # For IP addresses, skip DNS queries and return the IP itself
+            if self.is_ip_address(domain):
+                if record_type == "A":
+                    return [domain], None
+                else:
+                    return None, "IP address - no DNS records"
+            
+            # Try multiple DNS resolvers for domains
             resolvers = ['8.8.8.8', '1.1.1.1', '9.9.9.9']
             
             for resolver_ip in resolvers:
@@ -96,6 +118,10 @@ class DNSRecon:
     def zone_transfer(self, ns, domain):
         """Enhanced zone transfer with detailed results"""
         try:
+            # Skip zone transfer for IP addresses
+            if self.is_ip_address(domain):
+                return None, "IP address - no zone transfer possible"
+                
             xfr = dns.query.xfr(ns, domain, timeout=8)
             zone = dns.zone.from_xfr(xfr)
             
@@ -113,63 +139,89 @@ class DNSRecon:
         except Exception as e:
             return None, str(e)
 
-    def get_crtsh_subdomains(self, domain):
-        """Enhanced certificate transparency with multiple sources"""
+    def get_crtsh_subdomains(self, target):
+        """Enhanced certificate transparency that handles both domains and IPs"""
         self.animate_loading(f"Scanning certificate transparency logs", 3)
         
         subdomains = set()
-        sources = [
-            f"https://crt.sh/?q=%25.{domain}&output=json",
-            f"https://api.certspotter.com/v1/issuances?domain={domain}&include_subdomains=true&expand=dns_names",
-            f"https://tls.bufferover.run/dns?q=.{domain}"
-        ]
         
-        for source in sources:
+        # For IP addresses, search for certificates containing the IP
+        if self.is_ip_address(target):
             try:
-                if "crt.sh" in source:
-                    result = subprocess.run(
-                        ["curl", "-s", "--connect-timeout", "10", "-A", "Mozilla/5.0", source],
-                        capture_output=True, text=True, timeout=30
-                    )
-                    if result.stdout.strip():
-                        data = json.loads(result.stdout)
-                        for entry in data:
-                            name_value = entry.get("name_value", "")
-                            common_name = entry.get("common_name", "")
-                            
-                            for name in [name_value, common_name]:
-                                if name:
-                                    for line in str(name).splitlines():
-                                        subdomain = line.strip().lower()
-                                        if subdomain and not subdomain.startswith('*') and domain in subdomain:
-                                            subdomains.add(subdomain)
-                
-                elif "certspotter" in source:
-                    response = requests.get(source, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
-                    if response.status_code == 200:
-                        data = response.json()
-                        for entry in data:
-                            for dns_name in entry.get("dns_names", []):
-                                if not dns_name.startswith('*') and domain in dns_name.lower():
-                                    subdomains.add(dns_name.lower())
-                
-                elif "bufferover" in source:
-                    response = requests.get(source, timeout=15)
-                    if response.status_code == 200:
-                        data = response.json()
-                        if 'Results' in data:
-                            for result in data['Results']:
-                                if domain in result.lower():
-                                    subdomains.add(result.split(',')[0].lower())
-                                    
-            except Exception as e:
-                continue
+                result = subprocess.run(
+                    ["curl", "-s", "--connect-timeout", "10", "-A", "Mozilla/5.0", 
+                     f"https://crt.sh/?q={target}&output=json"],
+                    capture_output=True, text=True, timeout=30
+                )
+                if result.stdout.strip():
+                    data = json.loads(result.stdout)
+                    for entry in data:
+                        name_value = entry.get("name_value", "")
+                        common_name = entry.get("common_name", "")
+                        
+                        for name in [name_value, common_name]:
+                            if name and target in name:
+                                subdomains.add(name.strip().lower())
+            except:
+                pass
+        else:
+            # For domains, use the original logic
+            sources = [
+                f"https://crt.sh/?q=%25.{target}&output=json",
+                f"https://api.certspotter.com/v1/issuances?domain={target}&include_subdomains=true&expand=dns_names",
+                f"https://tls.bufferover.run/dns?q=.{target}"
+            ]
+            
+            for source in sources:
+                try:
+                    if "crt.sh" in source:
+                        result = subprocess.run(
+                            ["curl", "-s", "--connect-timeout", "10", "-A", "Mozilla/5.0", source],
+                            capture_output=True, text=True, timeout=30
+                        )
+                        if result.stdout.strip():
+                            data = json.loads(result.stdout)
+                            for entry in data:
+                                name_value = entry.get("name_value", "")
+                                common_name = entry.get("common_name", "")
+                                
+                                for name in [name_value, common_name]:
+                                    if name:
+                                        for line in str(name).splitlines():
+                                            subdomain = line.strip().lower()
+                                            if subdomain and not subdomain.startswith('*') and target in subdomain:
+                                                subdomains.add(subdomain)
+                    
+                    elif "certspotter" in source:
+                        response = requests.get(source, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
+                        if response.status_code == 200:
+                            data = response.json()
+                            for entry in data:
+                                for dns_name in entry.get("dns_names", []):
+                                    if not dns_name.startswith('*') and target in dns_name.lower():
+                                        subdomains.add(dns_name.lower())
+                    
+                    elif "bufferover" in source:
+                        response = requests.get(source, timeout=15)
+                        if response.status_code == 200:
+                            data = response.json()
+                            if 'Results' in data:
+                                for result in data['Results']:
+                                    if target in result.lower():
+                                        subdomains.add(result.split(',')[0].lower())
+                                        
+                except Exception as e:
+                    continue
         
         return sorted(list(subdomains)), None
 
-    def brute_force_subdomains(self, domain, wordlist_size="medium"):
-        """Enhanced subdomain bruteforce with progress"""
+    def brute_force_subdomains(self, target, wordlist_size="medium"):
+        """Enhanced subdomain bruteforce that handles IPs"""
         self.animate_loading(f"Bruteforcing subdomains", 3)
+        
+        # Skip bruteforce for IP addresses
+        if self.is_ip_address(target):
+            return [], "IP address - skipping subdomain bruteforce"
         
         # Dynamic wordlists based on size
         wordlists = {
@@ -200,7 +252,7 @@ class DNSRecon:
             if not self.running:
                 return None
                 
-            subdomain = f"{sub}.{domain}"
+            subdomain = f"{sub}.{target}"
             try:
                 socket.gethostbyname(subdomain)
                 return subdomain
@@ -232,9 +284,13 @@ class DNSRecon:
         print(f"\r{Fore.GREEN}✅ Bruteforce completed - Found {len(found_subdomains)} subdomains{' '*50}")
         return found_subdomains, None
 
-    def check_security_vulnerabilities(self, domain, records):
-        """Enhanced security assessment"""
+    def check_security_vulnerabilities(self, target, records):
+        """Enhanced security assessment that handles IPs"""
         vulnerabilities = []
+        
+        # Skip security checks for IP addresses (no DNS records to check)
+        if self.is_ip_address(target):
+            return vulnerabilities
         
         # Check SPF records
         txt_records = records.get('TXT', [])
@@ -280,18 +336,6 @@ class DNSRecon:
                 'impact': 'No email authentication policy',
                 'fix': 'Add DMARC record: v=DMARC1; p=none; rua=mailto:admin@domain.com'
             })
-        
-        # Check for exposed services
-        if records.get('A'):
-            for a_record in records['A']:
-                if 'localhost' in a_record or '127.0.0.1' in a_record:
-                    vulnerabilities.append({
-                        'type': 'Localhost Exposure',
-                        'severity': 'LOW',
-                        'record': a_record,
-                        'impact': 'Potential internal service exposure',
-                        'fix': 'Review DNS configuration'
-                    })
         
         return vulnerabilities
 
@@ -344,18 +388,26 @@ class DNSRecon:
         print(f"\r{' '*70}\r", end="")
         return sorted(open_ports)
 
-    def run_scan(self, domain, brute=False, full=False, wordlist_size="medium"):
-        """Main scanning function"""
+    def run_scan(self, target, brute=False, full=False, wordlist_size="medium"):
+        """Main scanning function that handles both domains and IPs"""
         self.banner()
-        print(f"{Fore.CYAN}[🎯] Target Domain: {Fore.YELLOW + Style.BRIGHT}{domain}")
+        
+        # Detect if target is IP or domain
+        target_type = "IP Address" if self.is_ip_address(target) else "Domain"
+        display_target = self.get_domain_from_ip(target) if self.is_ip_address(target) else target
+        
+        print(f"{Fore.CYAN}[🎯] Target: {Fore.YELLOW + Style.BRIGHT}{display_target}")
+        print(f"{Fore.CYAN}[📡] Type: {Fore.GREEN}{target_type}")
         print(f"{Fore.CYAN}[⚡] Scan Mode: {Fore.GREEN}{'Full Reconnaissance' if full else 'Standard'}")
-        if brute:
+        if brute and not self.is_ip_address(target):
             print(f"{Fore.CYAN}[💥] Bruteforce: {Fore.GREEN}Enabled ({wordlist_size} wordlist)")
+        elif brute and self.is_ip_address(target):
+            print(f"{Fore.CYAN}[💥] Bruteforce: {Fore.YELLOW}Skipped (IP address)")
         print()
 
         # Phase 1: DNS Records
         print(f"{Fore.MAGENTA + Style.BRIGHT}{'═'*60}")
-        print(f"{Fore.MAGENTA}🔍 PHASE 1: DNS RECORDS ENUMERATION")
+        print(f"{Fore.MAGENTA}🔍 PHASE 1: {'IP ANALYSIS' if self.is_ip_address(target) else 'DNS RECORDS ENUMERATION'}")
         print(f"{'═'*60}{Style.RESET_ALL}")
         
         record_types = ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "SOA"]
@@ -364,13 +416,15 @@ class DNSRecon:
 
         for rtype in record_types:
             self.animate_loading(f"Querying {rtype} records", 1)
-            answers, err = self.query_records(domain, rtype)
+            answers, err = self.query_records(target, rtype)
             
             print(f"{Fore.YELLOW + Style.BRIGHT}┌─ [{rtype} Records]")
             if answers:
                 records_list = []
                 for rdata in answers:
-                    if rtype == "MX":
+                    if isinstance(rdata, str):  # IP address case
+                        record = rdata
+                    elif rtype == "MX":
                         record = f"{rdata.preference} {rdata.exchange}"
                     elif rtype == "TXT":
                         txt = ''.join([part.decode() if isinstance(part, bytes) else part for part in getattr(rdata, 'strings', [])])
@@ -389,46 +443,51 @@ class DNSRecon:
                 
                 all_records[rtype] = records_list
             elif err:
-                print(f"{Fore.RED}├─ ✖ Error: {str(err)}")
+                print(f"{Fore.RED}├─ ✖ {err}")
             else:
                 print(f"{Fore.YELLOW}├─ No records found")
             print(f"{Fore.YELLOW}└─{'─'*50}")
             print()
 
-        # Security Assessment
+        # Security Assessment (skip for IPs)
         print(f"{Fore.RED + Style.BRIGHT}{'═'*60}")
         print(f"{Fore.RED}🛡️ PHASE 2: SECURITY ASSESSMENT")  
         print(f"{'═'*60}{Style.RESET_ALL}")
         
-        vulnerabilities = self.check_security_vulnerabilities(domain, all_records)
-        if vulnerabilities:
-            for vuln in vulnerabilities:
-                severity_color = Fore.RED if vuln['severity'] == 'HIGH' else Fore.YELLOW
-                print(f"{severity_color + Style.BRIGHT}🚨 {vuln['type']} ({vuln['severity']})")
-                print(f"{Fore.WHITE}   ├─ Impact: {vuln['impact']}")
-                print(f"{Fore.GREEN}   └─ Fix: {vuln['fix']}")
+        if self.is_ip_address(target):
+            print(f"{Fore.YELLOW}[ℹ️] Security assessment skipped for IP addresses")
         else:
-            print(f"{Fore.GREEN}[✓] No critical security issues detected")
+            vulnerabilities = self.check_security_vulnerabilities(target, all_records)
+            if vulnerabilities:
+                for vuln in vulnerabilities:
+                    severity_color = Fore.RED if vuln['severity'] == 'HIGH' else Fore.YELLOW
+                    print(f"{severity_color + Style.BRIGHT}🚨 {vuln['type']} ({vuln['severity']})")
+                    print(f"{Fore.WHITE}   ├─ Impact: {vuln['impact']}")
+                    print(f"{Fore.GREEN}   └─ Fix: {vuln['fix']}")
+            else:
+                print(f"{Fore.GREEN}[✓] No critical security issues detected")
         print()
 
-        # Zone Transfer
+        # Zone Transfer (skip for IPs)
         print(f"{Fore.BLUE + Style.BRIGHT}{'═'*60}")
         print(f"{Fore.BLUE}🔄 PHASE 3: ZONE TRANSFER TESTING")
         print(f"{'═'*60}{Style.RESET_ALL}")
         
-        if not ns_list:
+        if self.is_ip_address(target):
+            print(f"{Fore.YELLOW}[ℹ️] Zone transfer testing skipped for IP addresses")
+        elif not ns_list:
             print(f"{Fore.YELLOW}[!] No NS servers found")
         else:
             vulnerable_ns = []
             for ns in ns_list:
                 self.animate_loading(f"Testing {ns}", 1)
-                hosts, err = self.zone_transfer(ns, domain)
+                hosts, err = self.zone_transfer(ns, target)
                 
                 if hosts:
                     vulnerable_ns.append((ns, hosts))
                     print(f"{Fore.RED + Style.BRIGHT}[!] VULNERABLE: {ns}")
                     print(f"{Fore.GREEN}    └─ Retrieved {len(hosts)} records")
-                    for host in hosts[:3]:  # Show first 3
+                    for host in hosts[:3]:
                         print(f"{Fore.YELLOW}      • {host['name']} → {host['data']}")
                     if len(hosts) > 3:
                         print(f"{Fore.WHITE}      [...] and {len(hosts)-3} more")
@@ -444,26 +503,26 @@ class DNSRecon:
         print(f"{Fore.GREEN}📜 PHASE 4: CERTIFICATE TRANSPARENCY")
         print(f"{'═'*60}{Style.RESET_ALL}")
         
-        subdomains, err = self.get_crtsh_subdomains(domain)
+        subdomains, err = self.get_crtsh_subdomains(target)
         all_subdomains = set(subdomains) if subdomains else set()
         
         if subdomains:
-            print(f"{Fore.GREEN}[✓] Found {len(subdomains)} subdomains:")
+            print(f"{Fore.GREEN}[✓] Found {len(subdomains)} {'IP-related certificates' if self.is_ip_address(target) else 'subdomains'}:")
             for i, sub in enumerate(subdomains[:15], 1):
                 print(f"{Fore.WHITE}  [{i:2}] {Fore.CYAN}{sub}")
             if len(subdomains) > 15:
                 print(f"{Fore.WHITE}  [...] and {len(subdomains)-15} more")
         else:
-            print(f"{Fore.YELLOW}[!] No subdomains found in certificate logs")
+            print(f"{Fore.YELLOW}[!] No {'IP-related certificates' if self.is_ip_address(target) else 'subdomains'} found in certificate logs")
         print()
 
-        # Bruteforce if enabled
-        if brute or full:
+        # Bruteforce if enabled (skip for IPs)
+        if brute and not self.is_ip_address(target):
             print(f"{Fore.CYAN + Style.BRIGHT}{'═'*60}")
             print(f"{Fore.CYAN}💥 PHASE 5: SUBDOMAIN BRUTEFORCE")
             print(f"{'═'*60}{Style.RESET_ALL}")
             
-            brute_subs, err = self.brute_force_subdomains(domain, wordlist_size)
+            brute_subs, err = self.brute_force_subdomains(target, wordlist_size)
             if brute_subs:
                 new_subs = [sub for sub in brute_subs if sub not in all_subdomains]
                 print(f"{Fore.GREEN}[+] Found {len(new_subs)} new subdomains:")
@@ -475,12 +534,12 @@ class DNSRecon:
             print()
 
         # Live Host Detection
-        if all_subdomains or full:
+        if all_subdomains or full or self.is_ip_address(target):
             print(f"{Fore.YELLOW + Style.BRIGHT}{'═'*60}")
             print(f"{Fore.YELLOW}🌐 PHASE 6: LIVE HOST DETECTION")
             print(f"{'═'*60}{Style.RESET_ALL}")
             
-            targets = list(all_subdomains) + [domain]
+            targets = list(all_subdomains) if all_subdomains else [target]
             live_hosts = []
             
             def check_host(host):
@@ -515,7 +574,7 @@ class DNSRecon:
             # Quick port scan on live hosts
             if live_hosts:
                 print(f"\n{Fore.MAGENTA}[🔧] Quick port scan on live hosts:")
-                for host, ip in live_hosts[:5]:  # Limit to first 5
+                for host, ip in live_hosts[:5]:
                     open_ports = self.port_scan_host(ip)
                     if open_ports:
                         ports_str = ', '.join([f"{port}({service})" for port, service in open_ports])
@@ -532,13 +591,15 @@ class DNSRecon:
         total_records = sum(len(recs) for recs in all_records.values() if isinstance(recs, list))
         
         print(f"{Fore.CYAN}[📈] Statistics:")
-        print(f"    ├─ DNS Records: {Fore.WHITE}{total_records}")
-        print(f"    ├─ Subdomains: {Fore.WHITE}{len(all_subdomains)}")
+        print(f"    ├─ Target Type: {Fore.WHITE}{target_type}")
+        print(f"    ├─ {'DNS Records' if not self.is_ip_address(target) else 'IP Analysis'}: {Fore.WHITE}{total_records}")
+        print(f"    ├─ {'Subdomains' if not self.is_ip_address(target) else 'Related IPs'}: {Fore.WHITE}{len(all_subdomains)}")
         print(f"    ├─ Live Hosts: {Fore.WHITE}{len(live_hosts) if 'live_hosts' in locals() else 'N/A'}")
-        print(f"    ├─ Vulnerabilities: {Fore.WHITE}{len(vulnerabilities)}")
-        print(f"    └─ Nameservers: {Fore.WHITE}{len(ns_list)}")
+        if not self.is_ip_address(target):
+            print(f"    ├─ Vulnerabilities: {Fore.WHITE}{len(vulnerabilities) if 'vulnerabilities' in locals() else 0}")
+            print(f"    └─ Nameservers: {Fore.WHITE}{len(ns_list)}")
         
-        if vulnerabilities:
+        if not self.is_ip_address(target) and 'vulnerabilities' in locals() and vulnerabilities:
             print(f"\n{Fore.RED + Style.BRIGHT}[⚠️] Security Issues Found:")
             for vuln in vulnerabilities:
                 severity_icon = '🔴' if vuln['severity'] == 'HIGH' else '🟡'
@@ -548,9 +609,9 @@ class DNSRecon:
         print(f"{Fore.MAGENTA}[👻] Ghost out! Happy hunting, elite hacker! 🔥")
 
 def main():
-    parser = argparse.ArgumentParser(description="Ghost DNS Recon - Advanced DNS Enumeration")
-    parser.add_argument("domain", help="Domain to enumerate")
-    parser.add_argument("--brute", "-b", action="store_true", help="Enable subdomain bruteforce")
+    parser = argparse.ArgumentParser(description="Ghost DNS Recon - Advanced DNS & IP Enumeration by jusot99")
+    parser.add_argument("target", help="Target domain or IP address to enumerate")
+    parser.add_argument("--brute", "-b", action="store_true", help="Enable subdomain bruteforce (domains only)")
     parser.add_argument("--full", "-f", action="store_true", help="Full comprehensive scan")
     parser.add_argument("--wordlist", "-w", choices=["small", "medium", "large"], default="medium", help="Bruteforce wordlist size")
     
@@ -560,7 +621,7 @@ def main():
     signal.signal(signal.SIGINT, recon.handle_interrupt)
     
     try:
-        recon.run_scan(args.domain, args.brute, args.full, args.wordlist)
+        recon.run_scan(args.target, args.brute, args.full, args.wordlist)
     except KeyboardInterrupt:
         recon.handle_interrupt(None, None)
     except Exception as e:
