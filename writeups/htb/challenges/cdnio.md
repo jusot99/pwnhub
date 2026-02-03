@@ -204,6 +204,6 @@ JWT per worker: Because sharing secrets is overrated! 🔐🔐
 
 ---
 
-*Remember kids: Cache poisoning is like leaving cookies for Santa... if Santa was a hacker and the cookies contained your session tokens! 🎅💻*
+*Remember: Cache poisoning is like leaving cookies for Santa... if Santa was a hacker and the cookies contained your session tokens! 🎅💻*
 
 **Happy Hacking!** 🎯🔥
