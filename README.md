@@ -25,4 +25,4 @@ At PwnHub, you won’t find random scripts or noise. You’ll find **high-value 
 
 Whether you’re **studying, experimenting, or building your portfolio**, PwnHub is your **launchpad for mastery**. Stay curious, stay sharp, and never stop learning.
 
-**Connect & Collaborate:** 🌐 [jusot99](https://jusot99.github.io)
+⭐ Star the repo if you find it useful
