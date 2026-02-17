@@ -25,4 +25,4 @@ At PwnHub, you won’t find random scripts or noise. You’ll find **high-value 
 
 Whether you’re **studying, experimenting, or building your portfolio**, PwnHub is your **launchpad for mastery**. Stay curious, stay sharp, and never stop learning.
 
-If you find this project helpful, feel free to support the work with a star ⭐
+If you find this project helpful, feel free to support the work with a star ⭐ (helps others find it).
