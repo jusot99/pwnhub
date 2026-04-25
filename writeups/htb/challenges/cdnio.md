@@ -7,6 +7,7 @@
 **Challenge**: CDNio (Easy - 30 points)  
 **Category**: Web / Cache Poisoning  
 **Writeup by**: Jusot
+
 **Tags**: `cdn`, `cache`, `regex`, `jwt`, `race-condition`
 
 > **Race against time!** Tweak CDN and caching magic to make web pages load at lightning speed. Minimize cache misses and watch your load times drop!
@@ -221,4 +222,3 @@ JWT per worker: Because sharing secrets is overrated! 🔐🔐
 *Remember: Cache poisoning is like leaving cookies for Santa... if Santa was a hacker and the cookies contained your session tokens! 🎅💻*
 
 **Happy Hacking!** 🎯🔥
-
