@@ -3,13 +3,16 @@
 > *"Open secrets are not secrets!"* - The flag that tells you everything
 
 ## Challenge Overview 🎯
+
 **Challenge**: OpenSecret (Very Easy - 0 points)  
 **Category**: Web / Information Disclosure  
+**Writeup by**: Jusot
 **Tags**: `jwt`, `hardcoded-secrets`, `client-side`, `javascript`
 
 > **A simple help desk portal where users can submit support tickets. The application uses JWT tokens for session management, but something seems off about how they're implemented. Can you find the security flaw?**
 
 ## Executive Summary 📝
+
 This challenge demonstrates a **critical security vulnerability** where JWT secrets are exposed in client-side JavaScript code. The flag is literally the exposed secret key itself, teaching the valuable lesson that client-side secrets are never secure.
 
 ## The "Aha!" Moment 💡
@@ -18,14 +21,17 @@ The moment of realization came within seconds of visiting the page:
 
 1. **View Page Source (Ctrl+U)** - Always the first step!
 2. **Spot the smoking gun** in line 134 of the HTML:
+
    ```javascript
    const SECRET_KEY = "HTB{0p3n_s3cr3ts_ar3_n0t_s3cr3ts}";
    ```
+
 3. **Facepalm** 🤦‍♂️ - The vulnerability is literally spelled out in the flag!
 
 ## Technical Analysis 🔍
 
 ### 1. The Vulnerability: Client-Side JWT Secret Exposure
+
 The application generates JWT tokens **client-side** using Web Crypto API with a hardcoded secret:
 
 ```javascript
@@ -47,12 +53,14 @@ function generateJWT() {
 ```
 
 ### 2. Why This Is Critical 🔴
+
 - **Any user** can see the secret by viewing page source
 - **Token forgery** becomes trivial
 - **Authentication bypass** is possible
 - **Complete compromise** of JWT-based security
 
 ### 3. The Irony (and Lesson) 🎓
+
 The flag itself `HTB{0p3n_s3cr3ts_ar3_n0t_s3cr3ts}` perfectly describes the vulnerability. When secrets are "open" (exposed), they're no longer secrets!
 
 ## The Python Exploit 🐍
@@ -250,13 +258,15 @@ curl -s http://94.237.55.124:43313/ | grep -o "HTB{.*}"
 
 ## Key Takeaways 🧠
 
-### What Went Wrong for the Developers:
+### What Went Wrong for the Developers
+
 1. **Client-side JWT generation** - JWTs should NEVER be generated client-side
 2. **Hardcoded secrets in JavaScript** - Secrets belong in environment variables
 3. **No server-side validation** - Trusting client-generated tokens is dangerous
 4. **The flag tells you what's wrong** - The vulnerability is self-documenting!
 
-### Defense Recommendations:
+### Defense Recommendations
+
 ```python
 # ❌ NEVER DO THIS (what the challenge did):
 const SECRET_KEY = "HTB{0p3n_s3cr3ts_ar3_n0t_s3cr3ts}";
@@ -300,22 +310,27 @@ The answer: "Yes, it's on line 134... and 135... and..." 📜
 ```
 
 ## Final Flag 🏁
+
 **`HTB{0p3n_s3cr3ts_ar3_n0t_s3cr3ts}`**
 
 ## Lessons Learned 📚
+
 1. **ALWAYS check page source first** - Ctrl+U is your best friend
 2. **Client-side = Public knowledge** - Anything in the browser is visible to everyone
 3. **Secrets belong server-side** - Environment variables exist for a reason
 4. **The simplest vulnerabilities are often the most critical** - This was "Very Easy" but teaches a crucial lesson
 
 ## Real-World Impact 🌍
+
 This vulnerability, while seemingly simple, is **EXTREMELY COMMON** in real applications. Many developers mistakenly:
+
 - Embed API keys in JavaScript
 - Hardcode passwords in frontend code
 - Store sensitive configs in client-side bundles
 - Trust client-generated security tokens
 
 ## Tools Used 🛠️
+
 - `curl` - For quick HTTP requests
 - `grep` - For pattern searching
 - `rich` - For beautiful terminal output
@@ -328,3 +343,4 @@ This vulnerability, while seemingly simple, is **EXTREMELY COMMON** in real appl
 *Remember: If you can see it in your browser, so can everyone else. Client-side secrets are like writing your password on a post-it note stuck to your monitor! 📝💻*
 
 **Happy Hacking!** 🎯🔥
+

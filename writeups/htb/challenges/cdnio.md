@@ -3,13 +3,16 @@
 > *"Cache me if you can!"* - Every hacker trying to poison CDNs
 
 ## Challenge Overview 🎯
+
 **Challenge**: CDNio (Easy - 30 points)  
 **Category**: Web / Cache Poisoning  
+**Writeup by**: Jusot
 **Tags**: `cdn`, `cache`, `regex`, `jwt`, `race-condition`
 
 > **Race against time!** Tweak CDN and caching magic to make web pages load at lightning speed. Minimize cache misses and watch your load times drop!
 
 ## Executive Summary 📝
+
 This challenge demonstrates a classic **web cache poisoning** vulnerability combined with a **misconfigured regex pattern** and **JWT worker desync**. The flag is hidden in the admin's API key, accessible through a clever cache poisoning attack.
 
 ## The "Aha!" Moment 💡
@@ -23,6 +26,7 @@ After hours of banging my head against the wall (and consuming approximately 3 c
 ## Technical Analysis 🔍
 
 ### 1. The Stack 🥞
+
 - **Frontend**: Nginx with caching enabled for static files
 - **Backend**: Flask with Gunicorn (2 workers)
 - **Database**: SQLite
@@ -31,6 +35,7 @@ After hours of banging my head against the wall (and consuming approximately 3 c
 ### 2. The Vulnerability Triad 🔺
 
 #### A. Broken Regex (`routes.py`)
+
 ```python
 # What the source shows (nonsense):
 re.match(r'.*^profile', subpath)  # Can only match "profile" alone!
@@ -40,6 +45,7 @@ re.match(r'.*profile.*', subpath)  # Matches any path containing "profile"
 ```
 
 #### B. Nginx Caching Config (`nginx.conf`)
+
 ```nginx
 location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
     proxy_cache cache;  # ⚠️ Static files get cached!
@@ -48,9 +54,11 @@ location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
 ```
 
 #### C. JWT Worker Desync (`config.py`)
+
 ```python
 JWT_SECRET_KEY = os.urandom(69).hex()  # Random per worker instance!
 ```
+
 Each Gunicorn worker generates its own JWT secret → tokens from Worker A fail on Worker B.
 
 ### 3. The Attack Chain ⛓️
@@ -120,6 +128,7 @@ else:
 ```
 
 📥 **Output:**
+
 ```bash
 ❯ python3 solve.py http://94.237.63.174:43765
 ╭──────────────────────╮
@@ -139,19 +148,21 @@ else:
 2. **`.js` extension** → triggers nginx caching
 3. **Bot visits as admin** → gets admin's sensitive data
 4. **Response gets cached** → stored for 3 minutes
-5. **We access cached version** → no auth needed! 
+5. **We access cached version** → no auth needed!
 
 It's like convincing a security guard to open a vault, take a photo of the contents, and leave the photo on the public bulletin board. 📸
 
 ## Key Takeaways 🧠
 
-### What Went Wrong for the Developers:
+### What Went Wrong for the Developers
+
 1. **Regex gone wild** - `.*^profile` is regex nonsense
 2. **Cache everything!** - Static file caching includes sensitive endpoints
 3. **JWT secrets playing musical chairs** - Per-worker secrets cause race conditions
 4. **Admin bot with too much power** - Can visit any URL (hello, SSRF!)
 
-### Defense Recommendations:
+### Defense Recommendations
+
 ```python
 # 1. Fix the regex (properly anchor it)
 re.match(r'^.*profile$', subpath)  # Actually makes sense!
@@ -188,15 +199,18 @@ JWT per worker: Because sharing secrets is overrated! 🔐🔐
 ```
 
 ## Final Flag 🏁
+
 **`HTB{cDN_10_OoOoOoO_Sc1_F1_iOOOO0000}`**
 
 ## Lessons Learned 📚
+
 - Cache configuration is security configuration
 - Regex should come with a warning label ⚠️
 - Bots with admin privileges need handcuffs 🔗
 - Sometimes the simplest path (`profile.js`) is the right one
 
 ## Tools Used 🛠️
+
 - `requests` - For making web requests
 - `rich` - For pretty terminal output (because hackers deserve nice things too!)
 - `mitmproxy` - For traffic inspection
@@ -207,3 +221,4 @@ JWT per worker: Because sharing secrets is overrated! 🔐🔐
 *Remember: Cache poisoning is like leaving cookies for Santa... if Santa was a hacker and the cookies contained your session tokens! 🎅💻*
 
 **Happy Hacking!** 🎯🔥
+
