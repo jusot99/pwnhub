@@ -7,6 +7,7 @@
 **Challenge**: OpenSecret (Very Easy - 0 points)  
 **Category**: Web / Information Disclosure  
 **Writeup by**: Jusot
+
 **Tags**: `jwt`, `hardcoded-secrets`, `client-side`, `javascript`
 
 > **A simple help desk portal where users can submit support tickets. The application uses JWT tokens for session management, but something seems off about how they're implemented. Can you find the security flaw?**
@@ -343,4 +344,3 @@ This vulnerability, while seemingly simple, is **EXTREMELY COMMON** in real appl
 *Remember: If you can see it in your browser, so can everyone else. Client-side secrets are like writing your password on a post-it note stuck to your monitor! 📝💻*
 
 **Happy Hacking!** 🎯🔥
-
