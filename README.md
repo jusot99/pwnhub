@@ -29,17 +29,17 @@ python3 scripts/dnsinfo.py example.com
 
 | Script | Description |
 |--------|-------------|
-| `dnsinfo.py` | Advanced DNS recon & subdomain enumeration |
-| `nlg.py` | Network security auditing platform with MITM |
-| `ghostmitm.py` | LAN man-in-the-middle attack tool |
-| `netbreaker.py` | DDoS simulation (UDP/ICMP/SYN/Slowloris) |
-| `portscanner.py` | Multi-threaded TCP port scanner |
-| `secforce.py` | Real-time network threat detector |
-| `semok.py` | Layer 7 HTTP load testing tool |
-| `codeprobe.py` | HTTP status code analyzer |
-| `harden-linux.sh` | Linux system hardening script |
-| `root-hunter.sh` | Privilege escalation recon script |
-| `specter.ps1` | Windows post-exploitation recon |
+| [`dnsinfo.py`](scripts/dnsinfo.py) | Advanced DNS recon & subdomain enumeration |
+| [`nlg.py`](scripts/nlg.py) | Network security auditing platform with MITM |
+| [`ghostmitm.py`](scripts/ghostmitm.py) | LAN man-in-the-middle attack tool |
+| [`netbreaker.py`](scripts/netbreaker.py) | DDoS simulation (UDP/ICMP/SYN/Slowloris) |
+| [`portscanner.py`](scripts/portscanner.py) | Multi-threaded TCP port scanner |
+| [`secforce.py`](scripts/secforce.py) | Real-time network threat detector |
+| [`semok.py`](scripts/semok.py) | Layer 7 HTTP load testing tool |
+| [`codeprobe.py`](scripts/codeprobe.py) | HTTP status code analyzer |
+| [`harden-linux.sh`](scripts/harden-linux.sh) | Linux system hardening script |
+| [`root-hunter.sh`](scripts/root-hunter.sh) | Privilege escalation recon script |
+| [`specter.ps1`](scripts/specter.ps1) | Windows post-exploitation recon |
 
 ---
 
