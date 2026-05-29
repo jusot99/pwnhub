@@ -1,6 +1,6 @@
 #!/bin/bash
 # root-hunter.sh — Jusot99's Ultimate Linux Privilege Escalation Recon Tool
-# Author: @jusot99 | Elite Hacker Mode
+# Author: @Jusot | Elite Hacker Mode
 
 set -e
 
@@ -24,7 +24,7 @@ banner() {
 ╚██████╔╝██║  ██║╚██████╔║███████║   ██║   
  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   
 EOF
-  echo -e "${RESET}${C}         Ghost PrivEsc v2.0 by jusot99${RESET}\n"
+  echo -e "${RESET}${C}         Ghost PrivEsc v2.0 by Jusot${RESET}\n"
 }
 
 spin() {

@@ -2,7 +2,7 @@
 
 `Metasploitable2` `Penetration Testing` `Educational` `22 Services` `Root Access`
 
-**By: jusot99**
+**By: Jusot**
 **💀 Shadow Brotherhood Collective**
 **Educational Purpose | Tested Commands | 22 Services Exploited**
 
@@ -982,7 +982,7 @@ This exercise reinforces that security requires constant vigilance, regular patc
 
 > **"They didn't just leave the keys under the mat - they left every door unlocked and a welcome sign for attackers. Metasploitable2 isn't just vulnerable, it's a masterclass in what NOT to do in production."**
 
-**- jusot99, Shadow Brotherhood Collective** 🖤
+**- Jusot, Shadow Brotherhood Collective** 🖤
 
 ---
 *This writeup serves educational purposes only. Always ensure you have explicit permission before testing any system. The skills demonstrated here should only be used for ethical security testing, penetration testing with authorization, and improving defensive security postures.*

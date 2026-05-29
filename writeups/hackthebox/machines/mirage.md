@@ -5,7 +5,7 @@
 > **Season 8**
 > **Category**: Active Directory, AD CS, Kerberos, RBCD, Certificate Abuse 
 > **Creators:** [EmSec](https://app.hackthebox.com/users/962022) & [ctrlzero](https://app.hackthebox.com/users/168546)
-> **By**: [jusot99](https://jusot99.github.io)  
+> **By**: [Jusot](https://jusot99.github.io)  
 > 
 > _"Real hackers don’t ask for permission. We get in, stay low, and make it look like magic."_ 
 

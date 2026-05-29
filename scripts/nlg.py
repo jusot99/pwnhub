@@ -53,7 +53,7 @@ except ImportError as e:
 class NetLabGuard:
     def __init__(self):
         self.version = "1.0.0"
-        self.author = "jusot99"
+        self.author = "Jusot"
         self.console = Console()
         self.authorized = False
         self.interface = None
@@ -89,7 +89,7 @@ class NetLabGuard:
 
         subtitle = f"Network Security Auditing Platform v{self.version}"
         description = "Enterprise-Grade | Linux-Only | Professional MITM Suite"
-        author_line = f"By: {getattr(self, 'author', 'jusot99')}"
+        author_line = f"By: {getattr(self, 'author', 'Jusot')}"
 
         banner_panel = Panel(
             Align.center(

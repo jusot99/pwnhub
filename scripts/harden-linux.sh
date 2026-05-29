@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Universal Linux Hardening Script
-# Author: jusot99
+# Author: Jusot
 # Usage: sudo ./harden-linux.sh
 
 # Colors
@@ -18,7 +18,7 @@ info() { echo -e "${BLUE}[i] $1${NC}"; }
 echo -e "${GREEN}
 ╔══════════════════════════════════════╗
 ║        LOCKDOWN - Linux Hardener     ║
-║              by jusot99              ║
+║              by Jusot              ║
 ╚══════════════════════════════════════╝${NC}"
 
 # Detect OS
@@ -178,4 +178,4 @@ echo -e "${GREEN}
 
 warn "Important: Test SSH on port 2200 before disconnecting!"
 warn "Recommended: Reboot system to apply all changes"
-log "Hardening complete by jusot99 - Stay secure! 🔒"
+log "Hardening complete by Jusot - Stay secure! 🔒"

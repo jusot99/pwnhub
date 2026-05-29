@@ -19,7 +19,7 @@ def banner():
 ║╔══╝║╔══╝║╔╗╔╝║╔╗╔╝╚══╗║
 ║╚══╗║╚══╗║║║╚╗║║║╚╗║╚═╝║
 ╚═══╝╚═══╝╚╝╚═╝╚╝╚═╝╚═══╝
-    """ + Fore.YELLOW + "SEMOK-DDoS | by jusot99 | Educational Use Only!")
+    """ + Fore.YELLOW + "SEMOK-DDoS | by Jusot | Educational Use Only!")
 
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",

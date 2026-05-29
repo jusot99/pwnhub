@@ -25,7 +25,7 @@ class PortScanner:
 ╔═╗╔═╗╔╦╗╔═╗╦  ╦  ╔═╗╔═╗╔╦╗╔═╗╔╦╗
 ║ ╦╠═╝║║║╠═╣║  ║  ║  ║ ║║║║╠═╣ ║ 
 ╚═╝╩  ╩ ╩╩ ╩╩═╝╩═╝╚═╝╚═╝╩ ╩╩ ╩ ╩ 
-        """ + Fore.YELLOW + "by jusot99" + Fore.CYAN + " | Ethical Scanning Only!\n")
+        """ + Fore.YELLOW + "by Jusot" + Fore.CYAN + " | Ethical Scanning Only!\n")
 
     def get_service(self, port):
         services = {

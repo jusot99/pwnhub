@@ -30,7 +30,7 @@ class GhostDDoS:
     ╩ ╩╚═╝╚═╝╩╚═ ╩ ╩ ╩╩╚═
         """
             + Fore.YELLOW
-            + "      NETBREAKER v2.0 by jusot99"
+            + "      NETBREAKER v2.0 by Jusot"
             + Fore.CYAN
             + "\n        Educational Use Only!\n"
         )

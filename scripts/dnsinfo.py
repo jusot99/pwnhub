@@ -39,7 +39,7 @@ class DNSRecon:
         ╔══════════════════════════════════════╗
         ║   🚀 GHOST DNS RECON v2.0            ║
         ║   Professional Intel Gathering       ║
-        ║   by jusot99                         ║
+        ║   by Jusot                         ║
         ╚══════════════════════════════════════╝
 {Style.RESET_ALL}""")
 
@@ -609,7 +609,7 @@ class DNSRecon:
         print(f"{Fore.MAGENTA}[👻] Ghost out! Happy hunting, elite hacker! 🔥")
 
 def main():
-    parser = argparse.ArgumentParser(description="Ghost DNS Recon - Advanced DNS & IP Enumeration by jusot99")
+    parser = argparse.ArgumentParser(description="Ghost DNS Recon - Advanced DNS & IP Enumeration by Jusot")
     parser.add_argument("target", help="Target domain or IP address to enumerate")
     parser.add_argument("--brute", "-b", action="store_true", help="Enable subdomain bruteforce (domains only)")
     parser.add_argument("--full", "-f", action="store_true", help="Full comprehensive scan")

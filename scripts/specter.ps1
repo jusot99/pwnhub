@@ -13,7 +13,7 @@ function Show-Banner {
     ██║   ██║██╔══██║██║   ██║╚════██║   ██║   
     ╚██████╔╝██║  ██║╚██████╔║███████║   ██║   
      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   
-        Ghost Recon v2.0 by jusot99
+        Ghost Recon v2.0 by Jusot
 "@ -ForegroundColor Cyan
     Start-Sleep -Milliseconds 500
 }
@@ -242,4 +242,4 @@ Write-Host "    • Check writable paths and service permissions" -ForegroundCol
 Write-Host "    • Analyze running processes for credentials" -ForegroundColor White
 Write-Host "    • Use downloaded tools for deeper analysis" -ForegroundColor White
 Write-Host "="*60 -ForegroundColor Magenta
-Write-Host "    Ghost out! 👻 - jusot99" -ForegroundColor Cyan
+Write-Host "    Ghost out! 👻 - Jusot" -ForegroundColor Cyan

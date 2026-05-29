@@ -16,7 +16,7 @@ def banner():
     ╔╦╗╦╔═╗╔═╗╔═╗╔╦╗
      ║ ║║ ║╠═╝║ ║ ║ 
      ╩ ╩╚═╝╩  ╚═╝ ╩ 
-    {Fore.CYAN}       by jusot99
+    {Fore.CYAN}       by Jusot
     {Fore.YELLOW}   Ghost MITM v1.0
     {Style.RESET_ALL}""")
 
@@ -54,10 +54,10 @@ class GhostMITM:
         try:
             while self.running: 
                 time.sleep(1)
-                print(f"\r{Fore.RED}{spinner[int(time.time()) % len(spinner)]} MITM Active - jusot99 ghosting...", end="")
+                print(f"\r{Fore.RED}{spinner[int(time.time()) % len(spinner)]} MITM Active - Jusot ghosting...", end="")
         except KeyboardInterrupt:
             self.running = False
-            print(f"\n{Fore.YELLOW}🛑 MITM stopped by jusot99{Style.RESET_ALL}")
+            print(f"\n{Fore.YELLOW}🛑 MITM stopped by Jusot{Style.RESET_ALL}")
 
     def arp_poison(self):
         while self.running:
@@ -76,7 +76,7 @@ class GhostMITM:
 
 if __name__ == "__main__":
     banner()
-    parser = argparse.ArgumentParser(description="👻 Ghost MITM - LAN Man-in-the-Middle by jusot99")
+    parser = argparse.ArgumentParser(description="👻 Ghost MITM - LAN Man-in-the-Middle by Jusot")
     parser.add_argument("network", help="Target network (e.g., 192.168.1.0/24)")
     parser.add_argument("-i", "--interface", required=True, help="Network interface")
     parser.add_argument("-g", "--gateway", required=True, help="Gateway IP")

@@ -10,7 +10,7 @@ banner = f"""{Fore.RED}
 ██╔══██║   ██║      ██║   ██╔═══╝ 
 ██║  ██║   ██║      ██║   ██║     
 ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝     
-{Fore.YELLOW}         by jusot99{Style.RESET_ALL}"""
+{Fore.YELLOW}         by Jusot{Style.RESET_ALL}"""
 
 codes = {100:("Continue","ℹ️",Fore.CYAN),101:("Switching Protocols","🔄",Fore.CYAN),200:("OK","✅",Fore.GREEN),
          201:("Created","✅",Fore.GREEN),301:("Moved Permanently","📦",Fore.BLUE),302:("Found","🔍",Fore.BLUE),
@@ -35,7 +35,7 @@ def test_url(url):
         print(f"{Fore.RED}❌ Error testing {url}: {e}{Style.RESET_ALL}")
 
 print(banner)
-print(f"{Fore.CYAN}HTTP CodeProbe v2.0 | by jusot99 | 'help' for commands{Style.RESET_ALL}")
+print(f"{Fore.CYAN}HTTP CodeProbe v2.0 | by Jusot | 'help' for commands{Style.RESET_ALL}")
 
 if args.url:
     test_url(args.url)
@@ -75,5 +75,5 @@ while True:
                 print(f"{Fore.RED}❌ Unknown HTTP code{Style.RESET_ALL}")
                 print(f"{Fore.CYAN}💡 Use 'range 100 600' to see all codes{Style.RESET_ALL}")
     except KeyboardInterrupt:
-        print(f"\n{Fore.RED}🛑 Stay stealthy! - jusot99{Style.RESET_ALL}")
+        print(f"\n{Fore.RED}🛑 Stay stealthy! - Jusot{Style.RESET_ALL}")
         break

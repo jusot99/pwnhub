@@ -22,7 +22,7 @@ class SecForce:
     ╚═╗║ ║║ ║╠╦╝║╣ ║   ║ ║ ║
     ╚═╝╚═╝╚═╝╩╚═╚═╝╚═╝ ╩ ╚═╝
     {Fore.CYAN}    NETWORK THREAT DETECTOR v2.0
-    {Fore.YELLOW}         by jusot99
+    {Fore.YELLOW}         by Jusot
     """
         print(banner)
 
