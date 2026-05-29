@@ -4,24 +4,45 @@
 
 ![JusotLabs](misc/image/jusotlabs.png)
 
-Welcome to **JusotLabs**, a hand‑curated arsenal for ethical hackers, penetration testers, and security researchers. This is where ideas meet action, A place to **learn, experiment, and sharpen real-world hacking skills**.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-At JusotLabs, you won’t find random scripts or noise. You’ll find **high-value resources**, from custom automation tools to exploit studies, deep-dive write-ups, and essential cybersecurity references. Every resource is chosen to **teach, challenge, and elevate your offensive security game**.
+Welcome to **JusotLabs** — a hand-curated arsenal for ethical hackers, penetration testers, and security researchers. This is where ideas meet action, a place to **learn, experiment, and sharpen real-world hacking skills**.
 
-**What you can explore here:**
+## What's Inside
 
-- 🛠️ **Custom Scripts & Automation** → Enumeration, privesc, network recon, post-exploitation workflows.
+- 🛠️ **11 Security Tools** — DNS recon, port scanning, ARP spoofing, MITM, threat detection, DDoS simulation, HTTP probing, system hardening, and privilege escalation enumeration.
+- 📝 **[CTF Writeups](writeups/)** — Detailed walkthroughs for Hack The Box, OverTheWire, and VulnHub machines.
+- 📚 **[Reading List](reading-list.md)** — Curated book and resource references to deepen your knowledge.
 
-- 💣 **Exploits & Proof-of-Concepts** → Learn from real techniques, understand attack chains, test safely.
+All tools are Linux-compatible (some require root). Available in Python, Bash, and PowerShell.
 
-- 📚 **Cybersecurity Knowledge** → Books, research papers, and notes that deepen your understanding.
+**JusotLabs is for education and ethical research only.** Using these tools outside of authorized environments is prohibited.
 
-- 🔧 **Toolkits & Utilities** → Pre-configured tools to make your pentesting workflow smoother.
+## Quick Start
 
-- 📝 **Writeups & Methodology** → Step-by-step breakdowns of attacks, vulnerabilities, and security research.
+```bash
+pip install -r requirements.txt
+python3 scripts/dnsinfo.py example.com
+```
 
-**JusotLabs is for education and ethical research only.** Using these tools outside of authorized environments is prohibited. Your skill is your responsibility, use it wisely.
+## Tools
 
-Whether you’re **studying, experimenting, or building your portfolio**, JusotLabs is your **launchpad for mastery**. Stay curious, stay sharp, and never stop learning.
+| Script | Description |
+|--------|-------------|
+| `dnsinfo.py` | Advanced DNS recon & subdomain enumeration |
+| `nlg.py` | Network security auditing platform with MITM |
+| `ghostmitm.py` | LAN man-in-the-middle attack tool |
+| `netbreaker.py` | DDoS simulation (UDP/ICMP/SYN/Slowloris) |
+| `portscanner.py` | Multi-threaded TCP port scanner |
+| `secforce.py` | Real-time network threat detector |
+| `semok.py` | Layer 7 HTTP load testing tool |
+| `codeprobe.py` | HTTP status code analyzer |
+| `harden-linux.sh` | Linux system hardening script |
+| `root-hunter.sh` | Privilege escalation recon script |
+| `specter.ps1` | Windows post-exploitation recon |
 
-If you find this project helpful, feel free to support the work with a star ⭐ (helps others find it).
+---
+
+Whether you're **studying, experimenting, or building your portfolio**, JusotLabs is your **launchpad for mastery**. Stay curious, stay sharp, and never stop learning.
+
+If you find this useful, a star ⭐ helps others find it.

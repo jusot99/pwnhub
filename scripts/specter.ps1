@@ -1,5 +1,5 @@
 # Jusot99's PowerShell Post-Exploitation Recon Script
-# Ghost Hacker Edition v2.0 🧠👻
+# Ghost Hacker Edition v2.0
 
 # Colors and Animation
 $Host.UI.RawUI.ForegroundColor = "White"
