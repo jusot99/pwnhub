@@ -10,7 +10,7 @@ Welcome to **JusotLabs** — a hand-curated arsenal for ethical hackers, penetra
 
 ## What's Inside
 
-- 🛠️ **11 Security Tools** — DNS recon, port scanning, ARP spoofing, MITM, threat detection, DDoS simulation, HTTP probing, system hardening, and privilege escalation enumeration.
+- 🛠️ **[11 Security Tools](scripts/)** — DNS recon, port scanning, ARP spoofing, MITM, threat detection, DDoS simulation, HTTP probing, system hardening, and privilege escalation enumeration.
 - 📝 **[CTF Writeups](writeups/)** — Detailed walkthroughs for Hack The Box, OverTheWire, and VulnHub machines.
 - 📚 **[Reading List](reading-list.md)** — Curated book and resource references to deepen your knowledge.
 
