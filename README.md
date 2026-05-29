@@ -6,13 +6,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Welcome to **JusotLabs** — a hand-curated arsenal for ethical hackers, penetration testers, and security researchers. This is where ideas meet action, a place to **learn, experiment, and sharpen real-world hacking skills**.
+Welcome to **JusotLabs**, a hand-curated arsenal for ethical hackers, penetration testers, and security researchers. This is where ideas meet action, a place to **learn, experiment, and sharpen real-world hacking skills**.
 
 ## What's Inside
 
-- 🛠️ **[11 Security Tools](scripts/)** — DNS recon, port scanning, ARP spoofing, MITM, threat detection, DDoS simulation, HTTP probing, system hardening, and privilege escalation enumeration.
-- 📝 **[CTF Writeups](writeups/)** — Detailed walkthroughs for Hack The Box, OverTheWire, and VulnHub machines.
-- 📚 **[Reading List](reading-list.md)** — Curated book and resource references to deepen your knowledge.
+- 🛠️ **[Security Tools](scripts/)** → DNS recon, port scanning, ARP spoofing, MITM, threat detection, DDoS simulation, HTTP probing, system hardening, and privilege escalation enumeration.
+- 📝 **[CTF Writeups](writeups/)** → Detailed walkthroughs for Hack The Box, OverTheWire, and VulnHub machines.
+- 📚 **[Reading List](reading-list.md)** → Curated book and resource references to deepen your knowledge.
 
 All tools are Linux-compatible (some require root). Available in Python, Bash, and PowerShell.
 
