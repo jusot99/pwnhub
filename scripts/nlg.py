@@ -1344,7 +1344,7 @@ Or use web interface:
     )
 
     parser.add_argument(
-        "--version", action="version", version="NetLabGuard Enterprise v2.0.0"
+        "--version", action="version", version="NetLabGuard Enterprise v1.0.0"
     )
 
     args = parser.parse_args()
