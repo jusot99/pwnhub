@@ -8,17 +8,22 @@
 
 Welcome to **JusotLabs**, a hand-curated arsenal for ethical hackers, penetration testers, and security researchers. This is where ideas meet action, a place to **learn, experiment, and sharpen real-world hacking skills**.
 
+> [!WARNING]
+> **JusotLabs is for education and ethical research only.** Using these tools outside of authorized environments is prohibited.
+
 ## What's Inside
 
 - 🛠️ **[Security Tools](scripts/)** → DNS recon, port scanning, ARP spoofing, MITM, threat detection, DDoS simulation, HTTP probing, system hardening, and privilege escalation enumeration.
 - 📝 **[CTF Writeups](writeups/)** → Detailed walkthroughs for Hack The Box, OverTheWire, and VulnHub machines.
 - 📚 **[Reading List](reading-list.md)** → Curated book and resource references to deepen your knowledge.
 
-All tools are Linux-compatible (some require root). Available in Python, Bash, and PowerShell.
-
-**JusotLabs is for education and ethical research only.** Using these tools outside of authorized environments is prohibited.
+> [!NOTE]
+> **All tools are Linux-compatible.** Some scripts require root privileges ➜ check the documentation before running.
 
 ## Quick Start
+
+> [!TIP]
+> Clone the repo, install dependencies, and **start with `dnsinfo.py`** for a quick reconnaissance demo.
 
 ```bash
 pip install -r requirements.txt
@@ -43,6 +48,7 @@ python3 scripts/dnsinfo.py example.com
 
 ---
 
-Whether you're **studying, experimenting, or building your portfolio**, JusotLabs is your **launchpad for mastery**. Stay curious, stay sharp, and never stop learning.
+> [!TIP]
+> **Star the repo** ⭐ if you find it useful ➜ it helps others discover it too.
 
-If you find this useful, a star ⭐ helps others find it.
+Whether you're **studying, experimenting, or building your portfolio**, JusotLabs is your **launchpad for mastery**. Stay curious, stay sharp, and never stop learning.
